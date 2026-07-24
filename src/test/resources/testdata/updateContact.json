@@ -1,0 +1,13 @@
+{
+  "firstName": "UPDATED-John",
+  "lastName": "UPDATED-Doe",
+  "birthdate": "1992-05-15",
+  "email": "UPDATED-jane@example.com",
+  "phone": "09187654321",
+  "street1": "UPDATED-Street 2",
+  "street2": "UPDATED-Subdivision",
+  "city": "UPDATED-Makati",
+  "stateProvince": "UPDATED-Metro Manila",
+  "postalCode": "1200",
+  "country": "UPDATED-Philippines"
+}

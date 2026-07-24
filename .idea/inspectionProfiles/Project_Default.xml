@@ -1,0 +1,55 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="IncorrectHttpHeaderInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="customHeaders">
+        <set>
+          <option value="x-api-key" />
+        </set>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="VulnerableLibrariesLocal" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="isIgnoringEnabled" value="true" />
+      <option name="ignoredModules">
+        <list>
+          <option value="restassured_framework_v2.0.0" />
+          <option value="restassured_framework_v2.0.0" />
+          <option value="restassured_framework_v2.0.0" />
+          <option value="restassured_framework_v2.0.0" />
+        </list>
+      </option>
+      <option name="ignoredPackages">
+        <list>
+          <option value="ch.qos.logback:logback-classic:1.4.11" />
+          <option value="com.fasterxml.jackson.core:jackson-core:2.21.0" />
+          <option value="commons-codec:commons-codec:1.11" />
+          <option value="org.mozilla:rhino:1.7.7.2" />
+        </list>
+      </option>
+      <option name="ignoredReasons">
+        <list>
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="groupsTestNG" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="groups">
+        <value>
+          <list size="8">
+            <item index="0" class="java.lang.String" itemvalue="smoke" />
+            <item index="1" class="java.lang.String" itemvalue="test" />
+            <item index="2" class="java.lang.String" itemvalue="user" />
+            <item index="3" class="java.lang.String" itemvalue="regression" />
+            <item index="4" class="java.lang.String" itemvalue="sanity" />
+            <item index="5" class="java.lang.String" itemvalue="contact" />
+            <item index="6" class="java.lang.String" itemvalue="debug" />
+            <item index="7" class="java.lang.String" itemvalue="wip" />
+          </list>
+        </value>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>

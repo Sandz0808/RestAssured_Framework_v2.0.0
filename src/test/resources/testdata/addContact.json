@@ -1,0 +1,15 @@
+
+  {
+    "firstName": "John",
+    "lastName": "Doe",
+    "birthdate": "1990-01-01",
+    "email": "john@example.com",
+    "phone": "09123456789",
+    "street1": "Street 1",
+    "street2": "Subdivision",
+    "city": "Makati",
+    "stateProvince": "Metro Manila",
+    "postalCode": "1200",
+    "country": "Philippines"
+  }
+

@@ -1,0 +1,33 @@
+
+// --- RUN IN DIFFERENT ENVIRONMENT ----
+mvn test -Denv=dev -Dbrowser=firefox '-Dcucumber.filter.tags=@dropdown'
+mvn test -Denv=staging -Dbrowser=chrome '-Dcucumber.filter.tags=@dropdown'
+
+// --- RUN IN ALLURE
+
+# Run your tests (with mvn test
+mvn clean test
+
+# Generate Allure report
+allure serve target/allure-results
+
+# Generate static report
+allure generate target/allure-results --clean -o target/allure-report
+
+allure generate target/allure-results --single-file --output target/allure-report
+
+# Generate HTML report
+allure generate target/allure-results --single-file --output target/allure-report
+allure generate target/allure-results --single-file --output target/allure-report --clean
+Output in target/allure-report/index.html
+
+
+// --- CLEAN OUTPUT DIRECTORY
+mvn clean
+rm -rf target/allure-results
+
+
+Remove in TestRunner.java:
+"html:target/cucumber-html-report",
+Replace with:
+"io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm“

@@ -1,0 +1,16 @@
+{
+  "_id" : "6a62429d4c38ad001581e43f",
+  "firstName" : "John",
+  "lastName" : "Doe",
+  "birthdate" : "1990-01-01",
+  "email" : "sjimena_1784824471959@example.com",
+  "phone" : "09123456789",
+  "street1" : "Street 1",
+  "street2" : "Subdivision",
+  "city" : "Makati",
+  "stateProvince" : "Metro Manila",
+  "postalCode" : "1200",
+  "country" : "Philippines",
+  "owner" : "6a6242974c38ad001581e43a",
+  "__v" : 0
+}

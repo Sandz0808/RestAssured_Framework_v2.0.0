@@ -1,0 +1,66 @@
+<configuration>
+
+    <property name="LOG_DIR" value="target/logs"/>
+
+    <!-- ====================================================== -->
+    <!-- FILE APPENDER -->
+    <!-- ====================================================== -->
+
+    <appender name="FILE"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <file>${LOG_DIR}/test-execution.log</file>
+
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+
+        <rollingPolicy
+                class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+
+            <!-- Daily archive -->
+            <fileNamePattern>
+                ${LOG_DIR}/archived/test-execution.%d{yyyy-MM-dd}.%i.log
+            </fileNamePattern>
+
+            <!-- Roll when file reaches 10 MB -->
+            <maxFileSize>10MB</maxFileSize>
+
+            <!-- Keep only 7 days -->
+            <maxHistory>7</maxHistory>
+
+            <!-- Total archive limit -->
+            <totalSizeCap>1GB</totalSizeCap>
+
+            <!-- Delete old logs on startup -->
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+
+        </rollingPolicy>
+
+    </appender>
+
+    <!-- ====================================================== -->
+    <!-- CONSOLE -->
+    <!-- ====================================================== -->
+
+    <appender name="STDOUT"
+              class="ch.qos.logback.core.ConsoleAppender">
+
+        <encoder>
+            <pattern>%d{HH:mm:ss} %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+
+    </appender>
+
+    <!-- ====================================================== -->
+    <!-- ROOT -->
+    <!-- ====================================================== -->
+
+    <root level="INFO">
+
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
+
+    </root>
+
+</configuration>

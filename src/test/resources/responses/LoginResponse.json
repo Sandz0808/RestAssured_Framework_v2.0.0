@@ -1,0 +1,10 @@
+{
+  "user" : {
+    "_id" : "6a4ef4a486872400154cc193",
+    "firstName" : "Test",
+    "lastName" : "User",
+    "email" : "sjimena@faker.com",
+    "__v" : 135
+  },
+  "token" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTRlZjRhNDg2ODcyNDAwMTU0Y2MxOTMiLCJpYXQiOjE3ODQ4MDAwMjh9.BxB9VWfvfNbkSOPw6oLFX3_PfHe-Mixa5yFj6B-PK6w"
+}

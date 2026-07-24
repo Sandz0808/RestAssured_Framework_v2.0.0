@@ -214,4 +214,46 @@ public class CommonAssertions {
         }
     }
 
+    public static void verifyResponseHeaders(Response response) {
+
+        log.info("Verifying Response Headers.");
+
+        try {
+
+            Allure.step("Verify Response Headers", () -> {
+
+                Assert.assertNotNull(
+                        response,
+                        "Response object should not be null.");
+
+                Assert.assertTrue(
+                        response.getHeaders().size() > 0,
+                        "Response headers should not be empty.");
+
+                StringBuilder headers = new StringBuilder();
+
+                response.getHeaders().forEach(header ->
+                        headers.append(header.getName())
+                                .append(": ")
+                                .append(header.getValue())
+                                .append(System.lineSeparator()));
+
+                Allure.addAttachment(
+                        "Response Headers",
+                        "text/plain",
+                        headers.toString());
+
+            });
+
+            log.info("Response Headers verification passed.");
+
+        } catch (AssertionError e) {
+
+            log.error("Response Headers verification failed.", e);
+            throw e;
+
+        }
+
+    }
+
 }

@@ -1,9 +1,10 @@
-package com.cheq.contactlist.tests.usermanagement;
+package com.cheq.contactlist.tests.authmanagement;
 
 import com.cheq.contactlist.assertions.common.CommonAssertions;
 import com.cheq.contactlist.hooks.Hooks;
 import com.cheq.contactlist.listeners.RetryAnalyzer;
 import com.cheq.contactlist.payloads.users.LoginPayload;
+import com.cheq.contactlist.services.AuthService;
 import io.qameta.allure.*;
 import io.restassured.response.Response;
 import org.testng.annotations.Test;
@@ -21,9 +22,9 @@ public class TC006LogoutTest extends Hooks {
     )
     public void testSuccessfulUserLogout() {
 
-        Response token = UserService.loginUser(LoginPayload.createValidLogin());
+        Response token = AuthService.loginUser(LoginPayload.createValidLogin());
 
-        Response response = UserService.logoutUser(token.jsonPath().getString("token"));
+        Response response = AuthService.logoutUser(token.jsonPath().getString("token"));
 
         CommonAssertions.verifyStatusCode(response, 200);
 

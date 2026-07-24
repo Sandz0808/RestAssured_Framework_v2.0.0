@@ -1,7 +1,8 @@
 package com.cheq.contactlist.payloads.contacts;
 
 import com.cheq.contactlist.models.contactrequestmodel.UpdateContact;
-import com.cheq.contactlist.utils.JsonReaderUtil;
+import static com.cheq.contactlist.utils.JsonReaderUtil.getData;
+
 
 public class UpdateContactPayload {
 
@@ -13,18 +14,18 @@ public class UpdateContactPayload {
 
         String uniqueEmail = "SJimena_" + System.currentTimeMillis() + "@example.com";
 
-        contact.setFirstName(JsonReaderUtil.getUpdatedData("firstName"));
-        contact.setLastName(JsonReaderUtil.getUpdatedData("lastName"));
-        contact.setBirthdate(JsonReaderUtil.getUpdatedData("birthdate"));
-        contact.setBirthdate(JsonReaderUtil.getUpdatedData("birthdate"));
+        contact.setFirstName(getData("updateContact", "firstName"));
+        contact.setLastName(getData("updateContact","lastName"));
+        contact.setBirthdate(getData("updateContact","birthdate"));
+        contact.setBirthdate(getData("updateContact","birthdate"));
         contact.setEmail(uniqueEmail);
-        contact.setPhone(JsonReaderUtil.getUpdatedData("phone"));
-        contact.setStreet1(JsonReaderUtil.getUpdatedData("street1"));
-        contact.setStreet2(JsonReaderUtil.getUpdatedData("street2"));
-        contact.setCity(JsonReaderUtil.getUpdatedData("city"));
-        contact.setStateProvince(JsonReaderUtil.getUpdatedData("stateProvince"));
-        contact.setPostalCode(JsonReaderUtil.getUpdatedData("postalCode"));
-        contact.setCountry(JsonReaderUtil.getUpdatedData("country"));
+        contact.setPhone(getData("updateContact","phone"));
+        contact.setStreet1(getData("updateContact","street1"));
+        contact.setStreet2(getData("updateContact","street2"));
+        contact.setCity(getData("updateContact","city"));
+        contact.setStateProvince(getData("updateContact","stateProvince"));
+        contact.setPostalCode(getData("updateContact","postalCode"));
+        contact.setCountry(getData("updateContact","country"));
 
         return contact;
     }

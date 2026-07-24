@@ -1,4 +1,4 @@
-package com.cheq.contactlist.tests.examplebasic;
+package com.cheq.contactlist.tests.examples;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -49,7 +49,7 @@ public class LoginUserTest {
                 .extract()
                 .response();
 
-        SaveResponseUtil.saveResponse(response, "LoginResponse");
+        SaveResponseUtil.saveResponseBody(response, "LoginResponse");
 
     }
 }

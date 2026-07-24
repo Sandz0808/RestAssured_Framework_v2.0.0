@@ -41,7 +41,7 @@ public class ContactService {
             org.testng.Assert.fail("Failed to create contact.");
         }
 
-        SaveResponseUtil.saveResponse(response, "AddContactResponse");
+        SaveResponseUtil.saveResponseBody(response, "AddContactResponse");
         log.info("Response saved to AddContactResponse.json");
 
         return response;

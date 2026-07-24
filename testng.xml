@@ -30,7 +30,7 @@
 
         <packages>
 
-            <package name="com.cheq.contactlist.tests.examplebasic"/>
+            <package name="com.cheq.contactlist.tests.examples"/>
             <package name="com.cheq.contactlist.tests.e2e"/>
             <package name="com.cheq.contactlist.tests.usermanagement"/>
             <package name="com.cheq.contactlist.tests.contactmanagement"/>

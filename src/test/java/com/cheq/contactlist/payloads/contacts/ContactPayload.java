@@ -1,7 +1,7 @@
 package com.cheq.contactlist.payloads.contacts;
 
 import com.cheq.contactlist.models.contactrequestmodel.CreateContact;
-import com.cheq.contactlist.utils.JsonReaderUtil;
+import static com.cheq.contactlist.utils.JsonReaderUtil.getData;
 
 public class ContactPayload {
 
@@ -13,17 +13,17 @@ public class ContactPayload {
 
         String uniqueEmail = "SJimena_" + System.currentTimeMillis() + "@example.com";
 
-        contact.setFirstName(JsonReaderUtil.getContactData("firstName"));
-        contact.setLastName(JsonReaderUtil.getContactData("lastName"));
-        contact.setBirthdate(JsonReaderUtil.getContactData("birthdate"));
+        contact.setFirstName(getData("addContact","firstName"));
+        contact.setLastName(getData("addContact", "lastName"));
+        contact.setBirthdate(getData("addContact","birthdate"));
         contact.setEmail(uniqueEmail);
-        contact.setPhone(JsonReaderUtil.getContactData("phone"));
-        contact.setStreet1(JsonReaderUtil.getContactData("street1"));
-        contact.setStreet2(JsonReaderUtil.getContactData("street2"));
-        contact.setCity(JsonReaderUtil.getContactData("city"));
-        contact.setStateProvince(JsonReaderUtil.getContactData("stateProvince"));
-        contact.setPostalCode(JsonReaderUtil.getContactData("postalCode"));
-        contact.setCountry(JsonReaderUtil.getContactData("country"));
+        contact.setPhone(getData("addContact","phone"));
+        contact.setStreet1(getData("addContact","street1"));
+        contact.setStreet2(getData("addContact","street2"));
+        contact.setCity(getData("addContact","city"));
+        contact.setStateProvince(getData("addContact","stateProvince"));
+        contact.setPostalCode(getData("addContact","postalCode"));
+        contact.setCountry(getData("addContact","country"));
 
         return contact;
     }

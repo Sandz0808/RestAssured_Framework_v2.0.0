@@ -1,26 +1,28 @@
-package com.cheq.contactlist.tests.examplebasic;
+package com.cheq.contactlist.tests.examples;
 
 import io.restassured.RestAssured;
 import org.testng.annotations.Test;
 import com.cheq.contactlist.utils.JsonReaderUtil;
 
 import static io.restassured.RestAssured.*;
+import static org.hamcrest.Matchers.*;
 
-public class LogoutUserTest {
+public class ReadUserTest {
 
     @Test
-    public void testLogoutUser() {
+    public void testReadUserProfile() {
         RestAssured.baseURI = "https://thinking-tester-contact-list.herokuapp.com";
 
-        String token = JsonReaderUtil.readData("responses", "LoginToken", "token");
+        String token = JsonReaderUtil.readData("responses", "SignupResponse", "token");
 
         given()
                 .header("Authorization", "Bearer " + token)
                 .when()
-                .post("/users/logout")
+                .get("/users/me")
                 .then()
                 .statusCode(200)
-                .log().all();
+                .body("firstName", equalTo("Sandro"))
+                .log().body();
 
 
     }

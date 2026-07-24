@@ -16,7 +16,7 @@ public class TC002ReadUserTest extends Hooks {
 
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
-            groups = {"smoke", "user", "test"},
+            groups = {"smoke", "user", "debug"},
             description = "TC002-Successful read user"
     )
     public void testReadUser() {
@@ -31,6 +31,7 @@ public class TC002ReadUserTest extends Hooks {
         CommonAssertions.verifyResponseTime(response, 2000);
         CommonAssertions.verifyBodyContainsText(response, "Sandro");
         CommonAssertions.verifyResponseBody(response);
+        CommonAssertions.verifyResponseHeaders(response);
 
 
 

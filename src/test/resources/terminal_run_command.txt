@@ -1,7 +1,15 @@
 
-// --- RUN IN DIFFERENT ENVIRONMENT ----
-mvn test -Denv=dev -Dbrowser=firefox '-Dcucumber.filter.tags=@dropdown'
-mvn test -Denv=staging -Dbrowser=chrome '-Dcucumber.filter.tags=@dropdown'
+
+========= EXECUTION  =====================================================
+// execute in default env and selected groups
+mvn clean test -Dgroups=debug
+
+// execute in selected env and selected groups
+mvn clean test -Denv=staging -Dgroups=debug
+
+=======================================================================
+
+
 
 // --- RUN IN ALLURE
 

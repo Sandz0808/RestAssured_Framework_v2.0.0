@@ -1,4 +1,5 @@
 package com.cheq.contactlist.utils;
+import io.restassured.http.Headers;
 
 import java.util.*;
 
@@ -9,11 +10,7 @@ public final class LogSanitizerUtil {
 
     private static final String MASK = "*** Sensitive data is Masked for security! ***";
 
-    /**
-     * ==========================================================
-     * Sensitive Fields
-     * ==========================================================
-     */
+
     private static final Set<String> SENSITIVE_FIELDS = Set.of(
 
             "password",
@@ -25,11 +22,13 @@ public final class LogSanitizerUtil {
             "clientSecret",
             "secret",
             "_id",
-            "owner"
+            "owner",
+            "Reporting-Endpoints:",
+            "Report-To"
 
     );
 
-
+    // FOR JSON FORMAT
     public static String sanitize(Object object) {
 
         if (object == null) {
@@ -129,6 +128,52 @@ public final class LogSanitizerUtil {
         }
 
         return sanitized;
+
+    }
+
+
+
+    // FOR STRING FORMAT
+    public static String sanitizeHeaders(Headers headers) {
+
+        if (headers == null || headers.size() == 0) {
+            return "{}";
+        }
+
+        StringBuilder sanitized = new StringBuilder();
+
+        headers.forEach(header -> {
+
+            String value = switch (header.getName().toLowerCase()) {
+
+                case "authorization",
+                     "proxy-authorization",
+                     "cookie",
+                     "set-cookie",
+                     "x-api-key",
+                     "api-key",
+                     "access-token",
+                     "refresh-token",
+                     "x-auth-token",
+                     "report-to",
+                     "reporting-endpoints",
+                     "nel",
+                     "server",
+                     "via",
+                     "x-powered-by" -> MASK;
+
+                default -> header.getValue();
+
+            };
+
+            sanitized.append(header.getName())
+                    .append(": ")
+                    .append(value)
+                    .append(System.lineSeparator());
+
+        });
+
+        return sanitized.toString();
 
     }
 

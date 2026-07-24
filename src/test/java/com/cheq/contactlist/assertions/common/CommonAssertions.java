@@ -6,6 +6,8 @@ import io.qameta.allure.Allure;
 import io.restassured.response.Response;
 import org.slf4j.Logger;
 import org.testng.Assert;
+import io.restassured.http.Headers;
+import java.util.Map;
 
 public class CommonAssertions {
 
@@ -150,16 +152,24 @@ public class CommonAssertions {
                 Assert.assertTrue(
                         responseBody.contains(expectedText),
                         String.format(
-                                "Response body does not contain the expected text.%nExpected: %s",
+                                "Response body does not contain expected text '%s'.",
                                 expectedText));
 
-                Allure.addAttachment(
-                        "Expected Text",
-                        expectedText);
+                // Extract the actual matched text
+                String actualText = responseBody.contains(expectedText)
+                        ? expectedText
+                        : "NOT FOUND";
 
                 Allure.addAttachment(
-                        "Actual Text",
-                        expectedText);
+                        "Response Text Verification",
+                        "text/plain",
+                        String.format(
+                                """
+                                Expected Text : %s
+                                Actual Text   : %s
+                                """,
+                                expectedText,
+                                actualText));
 
             });
 
@@ -222,26 +232,28 @@ public class CommonAssertions {
 
             Allure.step("Verify Response Headers", () -> {
 
+                // Verify response object exists
                 Assert.assertNotNull(
                         response,
                         "Response object should not be null.");
 
+                // Get all response headers
+                Headers headers = response.headers();
+
+                // Verify headers are present
                 Assert.assertTrue(
-                        response.getHeaders().size() > 0,
+                        headers.size() > 0,
                         "Response headers should not be empty.");
 
-                StringBuilder headers = new StringBuilder();
+                // Sanitize sensitive header values
+                String sanitizedHeaders =
+                        LogSanitizerUtil.sanitizeHeaders(headers);
 
-                response.getHeaders().forEach(header ->
-                        headers.append(header.getName())
-                                .append(": ")
-                                .append(header.getValue())
-                                .append(System.lineSeparator()));
-
+                // Attach sanitized headers to Allure
                 Allure.addAttachment(
                         "Response Headers",
                         "text/plain",
-                        headers.toString());
+                        sanitizedHeaders);
 
             });
 

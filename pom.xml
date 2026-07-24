@@ -20,6 +20,11 @@
         <slf4j.version>2.0.17</slf4j.version>
         <logback.version>1.4.11</logback.version>
         <testng.version>7.10.2</testng.version>
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+
     </properties>
 
     <dependencies>
@@ -103,6 +108,15 @@
     <build>
 
         <plugins>
+            <!-- Compiler Plugin to handle Java 17 release target -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <release>17</release>
+                </configuration>
+            </plugin>
 
             <!-- ========================= -->
             <!-- Maven Surefire -->
@@ -121,9 +135,9 @@
 <!--                        <include>**/*Tests.java</include>-->
 <!--                    </includes>-->
 
-                                        <suiteXmlFiles>
-                                            <suiteXmlFile>testng.xml</suiteXmlFile>
-                                        </suiteXmlFiles>
+                    <suiteXmlFiles>
+                        <suiteXmlFile>testng.xml</suiteXmlFile>
+                    </suiteXmlFiles>
 
                     <systemPropertyVariables>
                         <allure.results.directory>

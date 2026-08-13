@@ -1,4 +1,4 @@
-package com.cheq.contactlist.utils;
+package com.cheq.contactlist.utilities;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

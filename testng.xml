@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
 
-<suite name="Contact List API Automation"
-       verbose="1">
-<!--       parallel="none">-->
+<suite name="API Automation Suite"
+       parallel="classes"
+       thread-count="3">
 
     <!-- ===================================================== -->
     <!-- LISTENERS -->
     <!-- ===================================================== -->
+
     <listeners>
 
         <!-- Retry Mechanism -->
         <listener class-name="com.cheq.contactlist.listeners.RetryTransformer"/>
 
-
     </listeners>
+
 
     <!-- ===================================================== -->
     <!-- MAIN EXECUTION -->
@@ -22,17 +24,19 @@
 
     <test name="API Test Suite">
 
-
-        <!-- ================================================ -->
+        <!-- ================================================= -->
         <!-- PACKAGE SCAN -->
-        <!-- Automatically discovers all tests -->
-        <!-- ================================================ -->
+        <!-- Automatically discovers all test classes -->
+        <!-- ================================================= -->
 
         <packages>
 
             <package name="com.cheq.contactlist.tests.examples"/>
-            <package name="com.cheq.contactlist.tests.e2e"/>
+
+            <package name="com.cheq.contactlist.tests.authentication"/>
+
             <package name="com.cheq.contactlist.tests.usermanagement"/>
+
             <package name="com.cheq.contactlist.tests.contactmanagement"/>
 
         </packages>

@@ -1,6 +1,6 @@
 package com.cheq.contactlist.assertions.validation;
 
-import com.cheq.contactlist.utils.LoggerUtil;
+import com.cheq.contactlist.utilities.LoggerUtil;
 import io.qameta.allure.Allure;
 import io.restassured.response.Response;
 import org.slf4j.Logger;

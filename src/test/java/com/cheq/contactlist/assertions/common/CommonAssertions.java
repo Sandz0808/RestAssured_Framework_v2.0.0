@@ -1,13 +1,12 @@
 package com.cheq.contactlist.assertions.common;
 
-import com.cheq.contactlist.utils.LogSanitizerUtil;
-import com.cheq.contactlist.utils.LoggerUtil;
+import com.cheq.contactlist.utilities.LogSanitizerUtil;
+import com.cheq.contactlist.utilities.LoggerUtil;
 import io.qameta.allure.Allure;
 import io.restassured.response.Response;
 import org.slf4j.Logger;
 import org.testng.Assert;
 import io.restassured.http.Headers;
-import java.util.Map;
 
 public class CommonAssertions {
 
@@ -16,11 +15,11 @@ public class CommonAssertions {
 
     public static void verifyStatusCode(Response response, int expectedStatusCode) {
 
-        log.info("Verifying Status Code. Expected: {}", expectedStatusCode);
+        log.info("Verifying Success Status Code. Expected: {}", expectedStatusCode);
 
         try {
 
-            Allure.step("Verify Status Code", () -> {
+            Allure.step("Verify Status Code: " + expectedStatusCode, () -> {
 
                 Assert.assertNotNull(
                         response,
@@ -140,7 +139,7 @@ public class CommonAssertions {
 
         try {
 
-            Allure.step("Verify Response Contains Text", () -> {
+            Allure.step("Verify Response Contains Text: " + expectedText, () -> {
 
                 Assert.assertNotNull(
                         response,
@@ -191,7 +190,7 @@ public class CommonAssertions {
 
         try {
 
-            Allure.step("Verify Response Time", () -> {
+            Allure.step("Verify Response Time ≤: " + expectedMaxResponseTime, () -> {
 
                 Assert.assertNotNull(
                         response,

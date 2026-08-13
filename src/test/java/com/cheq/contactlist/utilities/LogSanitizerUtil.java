@@ -1,4 +1,4 @@
-package com.cheq.contactlist.utils;
+package com.cheq.contactlist.utilities;
 import io.restassured.http.Headers;
 
 import java.util.*;

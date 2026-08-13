@@ -11,7 +11,7 @@ import com.cheq.contactlist.services.UserService;
 
 
 @Epic("Contact List API Testing")
-@Feature("User Management")
+@Feature("Add User Management")
 public class TC004DeleteUserTest extends Hooks {
 
     @Test(
@@ -21,7 +21,7 @@ public class TC004DeleteUserTest extends Hooks {
     )
     public void testDeleteUser() {
 
-        Response createUserResponse = UserService.createUser(CreateUserPayload.createValidUser());
+        Response createUserResponse = UserService.createUser(CreateUserPayload.createValidUser(0));
         String dynamicToken = createUserResponse.jsonPath().getString("token");
 
         Response response = UserService.deleteUser(dynamicToken);

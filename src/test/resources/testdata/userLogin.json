@@ -1,4 +1,32 @@
-{
-  "email": "sjimena@faker.com",
-  "password": "12345qwert"
-}
+[
+  {
+    "scenario": "Validate_Success_Status_Code_for_Valid_Credentials",
+    "email": "sjimena@faker.com",
+    "password": "12345qwert",
+    "expectedStatusCode": 200
+  },
+  {
+    "scenario": "Validate_Unauthorized_error_for_Empty_Email",
+    "email": "",
+    "password": "12345qwert",
+    "expectedStatusCode": 401
+  },
+  {
+    "scenario": "Validate_Unauthorized_error_for_Empty_Password",
+    "email": "sjimena@faker.com",
+    "password": "",
+    "expectedStatusCode": 401
+  },
+  {
+    "scenario": "Validate_Unauthorized_error_for_Invalid_Email",
+    "email": "invalidEmail@faker.com",
+    "password": "12345qwert",
+    "expectedStatusCode": 401
+  },
+  {
+    "scenario": "Validate_Unauthorized_error_for_Invalid_Password",
+    "email": "invalidEmail@faker.com",
+    "password": "invalidPassword",
+    "expectedStatusCode": 401
+  }
+]

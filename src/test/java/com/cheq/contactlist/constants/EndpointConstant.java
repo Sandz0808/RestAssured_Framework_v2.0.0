@@ -18,5 +18,4 @@ public class EndpointConstant {
     public static final String PUT_CONTACT = "/contacts/{id}";
     public static final String DELETE_CONTACT = "/contacts/{id}";
 
-
 }

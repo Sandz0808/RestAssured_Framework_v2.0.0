@@ -4,7 +4,7 @@ import io.restassured.response.Response;
 import org.slf4j.Logger;
 import org.testng.IRetryAnalyzer;
 import org.testng.ITestResult;
-import  com.cheq.contactlist.utils.LoggerUtil;
+import  com.cheq.contactlist.utilities.LoggerUtil;
 
 public class RetryAnalyzer implements IRetryAnalyzer {
 

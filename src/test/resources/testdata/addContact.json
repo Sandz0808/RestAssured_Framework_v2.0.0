@@ -1,5 +1,6 @@
-
+[
   {
+    "scenario": "Validate_Created_for_Valid_Contact_Details",
     "firstName": "John",
     "lastName": "Doe",
     "birthdate": "1990-01-01",
@@ -10,6 +11,52 @@
     "city": "Makati",
     "stateProvince": "Metro Manila",
     "postalCode": "1200",
-    "country": "Philippines"
+    "country": "Philippines",
+    "expectedStatusCode": 201
+  },
+  {
+    "scenario": "Validate_Bad_Request_error_for_Empty_FirstName",
+    "firstName": "",
+    "lastName": "Doe",
+    "birthdate": "1990-01-01",
+    "email": "john@example.com",
+    "phone": "09123456789",
+    "street1": "Street 1",
+    "street2": "Subdivision",
+    "city": "Makati",
+    "stateProvince": "Metro Manila",
+    "postalCode": "1200",
+    "country": "Philippines",
+    "expectedStatusCode": 400
+  },
+  {
+    "scenario": "Validate_Bad_Request_error_for_Empty_LastName",
+    "firstName": "John",
+    "lastName": "",
+    "birthdate": "1990-01-01",
+    "email": "john@example.com",
+    "phone": "09123456789",
+    "street1": "Street 1",
+    "street2": "Subdivision",
+    "city": "Makati",
+    "stateProvince": "Metro Manila",
+    "postalCode": "1200",
+    "country": "Philippines",
+    "expectedStatusCode": 400
+  },
+  {
+    "scenario": "Validate_Bad_Request_error_for_Invalid_Date_Format",
+    "firstName": "John",
+    "lastName": "Doe",
+    "birthdate": "01-01-1990",
+    "email": "john@example.com",
+    "phone": "09123456789",
+    "street1": "Street 1",
+    "street2": "Subdivision",
+    "city": "Makati",
+    "stateProvince": "Metro Manila",
+    "postalCode": "1200",
+    "country": "Philippines",
+    "expectedStatusCode": 400
   }
-
+]

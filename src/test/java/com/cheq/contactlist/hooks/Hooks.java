@@ -1,9 +1,9 @@
 package com.cheq.contactlist.hooks;
 
-import com.cheq.contactlist.specs.RequestSpec;
-import com.cheq.contactlist.utils.ApiAllureUtil;
-import com.cheq.contactlist.utils.ConfigReader;
-import com.cheq.contactlist.utils.LoggerUtil;
+import com.cheq.contactlist.specifications.RequestSpecs;
+import com.cheq.contactlist.utilities.ApiAllureUtil;
+import com.cheq.contactlist.utilities.ConfigReader;
+import com.cheq.contactlist.utilities.LoggerUtil;
 import io.restassured.RestAssured;
 import org.slf4j.Logger;
 import org.testng.ITestResult;
@@ -16,7 +16,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 
-public class Hooks extends RequestSpec {
+public class Hooks extends RequestSpecs {
 
     private static final Logger log = LoggerUtil.getLogger(Hooks.class);
 

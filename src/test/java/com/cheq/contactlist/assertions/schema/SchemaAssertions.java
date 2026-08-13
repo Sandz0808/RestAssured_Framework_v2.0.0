@@ -1,6 +1,6 @@
 package com.cheq.contactlist.assertions.schema;
 
-import com.cheq.contactlist.utils.LoggerUtil;
+import com.cheq.contactlist.utilities.LoggerUtil;
 import io.qameta.allure.Allure;
 import io.restassured.module.jsv.JsonSchemaValidator;
 import io.restassured.response.Response;

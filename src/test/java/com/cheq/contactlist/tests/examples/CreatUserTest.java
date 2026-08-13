@@ -1,14 +1,12 @@
 package com.cheq.contactlist.tests.examples;
 
+import com.cheq.contactlist.models.userrequestmodel.CreateUser;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import io.restassured.response.Response; // 1. IMPORT the RestAssured Response object
+import io.restassured.response.Response;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import com.cheq.contactlist.utils.SaveResponseUtil;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.cheq.contactlist.utilities.SaveResponseUtil;
 
 import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
@@ -22,18 +20,25 @@ public class CreatUserTest {
 
     @Test(priority = 1)
     public void testSuccessfulUserSignup() {
+
         String uniqueEmail = "user_" + System.currentTimeMillis() + "@example.com";
 
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("firstName", "Sandro");
-        requestBody.put("lastName", "Tester");
-        requestBody.put("email", uniqueEmail);
-        requestBody.put("password", "SecurePassword123!");
+//        Map<String, Object> requestBody = new HashMap<>();
+//        requestBody.put("firstName", "Sandro");
+//        requestBody.put("lastName", "Tester");
+//        requestBody.put("email", uniqueEmail);
+//        requestBody.put("password", "SecurePassword123!");
+
+        CreateUser user = new CreateUser();
+        user.setFirstName("Sandro");
+        user.setLastName("Tester");
+        user.setEmail(uniqueEmail);
+        user.setPassword("SecurePassword123!");
 
         // 2. Extract the entire Response object instead of just a string path
         Response response = given()
                 .contentType(ContentType.JSON)
-                .body(requestBody)
+                .body(user)
 
                 .when()
                 .post("/users")
@@ -46,6 +51,7 @@ public class CreatUserTest {
                 .body("user.email", equalTo(uniqueEmail))
                 .body("token", notNullValue())
                 .log().body()
+                .log().headers()
                 .extract()
                 .response(); // <-- This captures the whole JSON payload
 

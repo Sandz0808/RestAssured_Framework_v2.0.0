@@ -1,6 +1,61 @@
-{
-  "firstName": "Sandro",
-  "lastName": "Jimena",
-  "email": "test22222@fake.com",
-  "password": "myNewPassword!"
-}
+[
+  {
+  "scenario": "Validate_Created_for_Valid_Details",
+  "firstName": "Sandrex",
+  "lastName": "Jimenez",
+  "email": "test8888888@fake.com",
+  "password": "myNewPassword!",
+    "expectedStatusCode": 201
+},
+  {
+    "scenario": "Validate_Bad_Request_error_for_Duplicate_Email",
+    "firstName": "Test01",
+    "lastName": "Test02",
+    "email": "test8888888@fake.com",
+    "password": "myNewPassword!",
+    "expectedStatusCode": 400
+  },
+
+  {
+    "scenario": "Validate_Bad_Request_error_for_Empty_FirstName",
+    "firstName": "",
+    "lastName": "Jimenez",
+    "email": "test2222277@fake.com",
+    "password": "myNewPassword!",
+    "expectedStatusCode": 400
+  },
+
+  {
+    "scenario": "Validate_Bad_Request_error_for_Empty_LastName",
+    "firstName": "Sander",
+    "lastName": "",
+    "email": "test2222277@fake.com",
+    "password": "myNewPassword!",
+    "expectedStatusCode": 400
+  },
+  {
+    "scenario": "Validate_Bad_Request_error_for_Invalid_Email_Format",
+    "firstName": "Sander",
+    "lastName": "Jimenez",
+    "email": "test22222fake.com",
+    "password": "myNewPassword!",
+    "expectedStatusCode": 400
+  },
+  {
+    "scenario": "Validate_Bad_Request_error_for_Empty_Password",
+    "firstName": "Sander",
+    "lastName": "Jimenez",
+    "email": "test22222fake.com",
+    "password": "",
+    "expectedStatusCode": 400
+  },
+  {
+    "scenario": "Validate_Bad_Request_error_for_Short_Password",
+    "firstName": "Sander",
+    "lastName": "Jimenez",
+    "email": "test22222fake.com",
+    "password": "1234",
+    "expectedStatusCode": 400
+  }
+
+  ]

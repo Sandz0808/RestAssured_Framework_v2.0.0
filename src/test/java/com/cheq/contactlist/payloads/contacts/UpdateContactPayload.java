@@ -1,7 +1,7 @@
 package com.cheq.contactlist.payloads.contacts;
 
 import com.cheq.contactlist.models.contactrequestmodel.UpdateContact;
-import static com.cheq.contactlist.utils.JsonReaderUtil.getData;
+import static com.cheq.contactlist.utilities.JsonReaderUtil.getData;
 
 
 public class UpdateContactPayload {

@@ -1,4 +1,4 @@
-package com.cheq.contactlist.utils;
+package com.cheq.contactlist.utilities;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.http.Header;

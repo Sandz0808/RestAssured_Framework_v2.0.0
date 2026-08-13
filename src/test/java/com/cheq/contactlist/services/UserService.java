@@ -1,13 +1,13 @@
 package com.cheq.contactlist.services;
 
+import com.cheq.contactlist.specifications.RequestSpecs;
 import io.restassured.response.Response;
 import com.cheq.contactlist.models.userrequestmodel.*;
 import org.slf4j.Logger;
-import com.cheq.contactlist.utils.LoggerUtil;
-import com.cheq.contactlist.utils.SaveResponseUtil;
+import com.cheq.contactlist.utilities.LoggerUtil;
+import com.cheq.contactlist.utilities.SaveResponseUtil;
 import static com.cheq.contactlist.constants.EndpointConstant.*;
 import static io.restassured.RestAssured.given;
-import static com.cheq.contactlist.specs.RequestSpec.*;
 
 
 public class UserService {
@@ -22,26 +22,23 @@ public class UserService {
         log.info("User  : {} {}", payload.getFirstName(), payload.getLastName());
 
         Response response = given()
-                .spec(getRequestSpec())
+                .spec(RequestSpecs.requestSpec())
                 .body(payload)
                 .when()
                 .post(CREATE_USER); // e.g., POST /
 
+
+        log.info("Status Code   : {}", response.statusCode());
+        log.info("Response Time : {} ms", response.time());
+
+
         if (response.statusCode() == 201) {
-            log.info("Status Code   : {}", response.statusCode());
-            log.info("Response Time : {} ms", response.time());
 
-
-        } else {
-            log.error("Failed to create contact.");
-            org.testng.Assert.fail("Failed to create user.");
+            SaveResponseUtil.saveResponseBody(response, "SignupResponse");
+            log.info(" Response saved to SignupResponse.json");
         }
-
-        SaveResponseUtil.saveResponseBody(response, "SignupResponse");
-        log.info("Response saved to SignupResponse.json");
-
-        return response;
-    }
+            return response;
+        }
 
 
     public static Response readUser(String token) {
@@ -51,22 +48,14 @@ public class UserService {
         log.info(" Method   : GET");
 
         Response response = given()
-                .spec(authRequestSpec(token))
+                .spec(RequestSpecs.requestSpec(token))
                 .when()
                 .get(GET_USER); // e.g., GET /users/me
 
-        if (response.statusCode() == 200) {
-            log.info("Status Code  : {}", response.statusCode());
-            log.info("Response Time: {} ms", response.time());
-
-
-        } else {
-            log.error("Failed to GET user");
-            org.testng.Assert.fail("Failed to GET user.");
-        }
+        log.info("Status Code  : {}", response.statusCode());
+        log.info("Response Time: {} ms", response.time());
 
         return response;
-
     }
 
     public static Response updateUser(String token, UpdateUser payload) {
@@ -77,28 +66,17 @@ public class UserService {
         log.info("User     : {} {}", payload.getFirstName(), payload.getLastName());
 
         Response response = given()
-                .spec(authRequestSpec(token))
+                .spec(RequestSpecs.requestSpec(token))
                 .body(payload)
                 .when()
                 .patch(UPDATE_USER);
 
-        if (response.statusCode() == 200) {
-
-            log.info(" Status Code   : {}", response.statusCode());
-            log.info(" Response Time : {} ms", response.time());
-
-        } else {
-
-            log.error("Failed to update user.");
-            org.testng.Assert.fail("Failed to update user.");
-
-        }
-
-        SaveResponseUtil.saveResponseBody(response, "UpdateUserResponse");
-        log.info("Response saved to UpdateUserResponse.json");
+        log.info(" Status Code   : {}", response.statusCode());
+        log.info(" Response Time : {} ms", response.time());
 
         return response;
     }
+
 
     public static Response deleteUser(String token) {
 
@@ -107,18 +85,12 @@ public class UserService {
         log.info("Method : DELETED");
 
         Response response = given()
-                .spec(authRequestSpec(token))
+                .spec(RequestSpecs.requestSpec(token))
                 .when()
                 .delete(DELETE_USER); // e.g., DELETE /users/me
 
-        if (response.statusCode() == 200) {
-            log.info(" Status Code  : {}", response.statusCode());
-            log.info(" Response Time: {} ms", response.time());
-
-        } else {
-            log.error(" Failed to create contact");
-            org.testng.Assert.fail("Failed to create user.");
-        }
+        log.info(" Status Code  : {}", response.statusCode());
+        log.info(" Response Time: {} ms", response.time());
 
         return response;
     }

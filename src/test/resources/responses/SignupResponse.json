@@ -1,10 +1,10 @@
 {
   "user" : {
-    "_id" : "6a632f5a4c38ad001581e59e",
-    "firstName" : "Sandro",
-    "lastName" : "Jimena",
-    "email" : "sjimena_1784885080344@example.com",
+    "_id" : "6a7d864a9836ad00153d7ea0",
+    "firstName" : "Sandrex",
+    "lastName" : "Jimenez",
+    "email" : "sjimena_1786611273494@example.com",
     "__v" : 1
   },
-  "token" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTYzMmY1YTRjMzhhZDAwMTU4MWU1OWUiLCJpYXQiOjE3ODQ4ODUwODJ9.Q-RjA_GxKEiNgXJxWQrYAG7SiyALlevCWTo_T-giZbo"
+  "token" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTdkODY0YTk4MzZhZDAwMTUzZDdlYTAiLCJpYXQiOjE3ODY2MTEyNzR9.JJoG__vLYncgHZSx4_hWvIbE8l6vownN610kZEGS9t0"
 }

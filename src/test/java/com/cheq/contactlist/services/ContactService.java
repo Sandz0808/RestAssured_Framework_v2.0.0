@@ -1,14 +1,14 @@
 package com.cheq.contactlist.services;
 
+import com.cheq.contactlist.specifications.RequestSpecs;
 import io.restassured.response.Response;
 import com.cheq.contactlist.models.contactrequestmodel.CreateContact;
 import com.cheq.contactlist.models.contactrequestmodel.UpdateContact;
 import org.slf4j.Logger;
-import com.cheq.contactlist.utils.LoggerUtil;
-import com.cheq.contactlist.utils.SaveResponseUtil;
+import com.cheq.contactlist.utilities.LoggerUtil;
+import com.cheq.contactlist.utilities.SaveResponseUtil;
 import static com.cheq.contactlist.constants.EndpointConstant.*;
 import static io.restassured.RestAssured.given;
-import static com.cheq.contactlist.specs.RequestSpec.authRequestSpec;
 
 public class ContactService {
 
@@ -26,26 +26,22 @@ public class ContactService {
         log.info("Contact  : {} {}", payload.getFirstName(), payload.getLastName());
 
         Response response = given()
-                .spec(authRequestSpec(token))
+                .spec(RequestSpecs.requestSpec(token))
                 .body(payload)
                 .when()
                 .post(ADD_CONTACT);
 
+        log.info("Status Code   : {}", response.statusCode());
+        log.info("Response Time : {} ms", response.time());
+
         if (response.statusCode() == 201) {
-            log.info("Status Code   : {}", response.statusCode());
-            log.info("Response Time : {} ms", response.time());
 
+            SaveResponseUtil.saveResponseBody(response, "addContactResponse");
+            log.info("Response saved to addContactResponse.json");
 
-        } else {
-            log.error("Failed to create contact.");
-            org.testng.Assert.fail("Failed to create contact.");
         }
 
-        SaveResponseUtil.saveResponseBody(response, "AddContactResponse");
-        log.info("Response saved to AddContactResponse.json");
-
         return response;
-
     }
 
     // =================================================================
@@ -53,7 +49,7 @@ public class ContactService {
     // =================================================================
     public static Response getContactList(String token) {
         return given()
-                .spec(authRequestSpec(token))
+                .spec(RequestSpecs.requestSpec(token))
                 .when()
                 .get(GET_CONTACT_LIST); // e.g., GET /contacts
 
@@ -71,25 +67,16 @@ public class ContactService {
         log.info("Method  : GET");
 
         Response response = given()
-                .spec(authRequestSpec(token))
+                .spec(RequestSpecs.requestSpec(token))
                 .pathParam("id", contactId)
                 .when()
                 .get(GET_CONTACT, contactId); // e.g., GET /contacts/{id}
 
-        if (response.statusCode() == 200) {
-            log.info("Status Code  : {}", response.statusCode());
-            log.info(" Response Time : {} ms", response.time());
+        log.info("Status Code  : {}", response.statusCode());
+        log.info(" Response Time : {} ms", response.time());
 
-
-        } else {
-            log.error(" Failed to read contact.");
-            org.testng.Assert.fail("Failed to read contact.");
+            return response;
         }
-
-        return response;
-
-
-    }
 
     // =================================================================
     // UPDATE: Update a Contact fully (Requires Auth Token, Path Param, & Body)
@@ -101,25 +88,36 @@ public class ContactService {
         log.info("Method  : PUT ");
         log.info("Contact : {} {}", payload.getFirstName(), payload.getLastName());
 
-        return given()
-                .spec(authRequestSpec(token))
+        Response response = given()
+                .spec(RequestSpecs.requestSpec(token))
                 .pathParam("id", contactId)
                 .body(payload)
                 .when()
                 .put(PUT_CONTACT); // e.g., PUT /contacts/{id}
+
+        log.info(" Status Code  : {}", response.statusCode());
+        log.info(" Response Time: {} ms", response.time());
+
+        return response;
     }
 
     // =================================================================
     // PATCH: Partial update on a Contact (Requires Auth Token, Path Param, & Body)
     // =================================================================
     public static Response patchContact(String token, String contactId, CreateContact payload) {
-        return given()
-                .spec(authRequestSpec(token))
+        Response response =  given()
+                .spec(RequestSpecs.requestSpec(token))
                 .pathParam("id", contactId)
                 .body(payload)
                 .when()
                 .patch(UPDATE_CONTACT); // e.g., PATCH /contacts/{id}
-    }
+
+        log.info("Status Code : {}", response.statusCode());
+        log.info("Response Time: {} ms", response.time());
+
+        return response;
+        }
+
 
     // =================================================================
     // DELETE: Remove a Contact (Requires Auth Token & Path Param)
@@ -129,10 +127,17 @@ public class ContactService {
         log.info("==========  DELETE CONTACT  ==========");
         log.info("  Endpoint: {}", DELETE_CONTACT);
         log.info(" Method  : DELETED");
-        return given()
-                .spec(authRequestSpec(token))
+
+        Response response =  given()
+                .spec(RequestSpecs.requestSpec(token))
                 .pathParam("id", contactId)
                 .when()
                 .delete(DELETE_CONTACT); // e.g., DELETE /contacts/{id}
+
+        log.info("Status  Code : {}", response.statusCode());
+        log.info("Response  Time: {} ms", response.time());
+
+        return response;
     }
+
 }

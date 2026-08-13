@@ -6,18 +6,18 @@ import com.cheq.contactlist.assertions.validation.ValidationAssertions;
 import com.cheq.contactlist.hooks.Hooks;
 import com.cheq.contactlist.payloads.users.CreateUserPayload;
 import com.cheq.contactlist.services.UserService;
-import com.cheq.contactlist.utils.ApiAllureUtil;
+import com.cheq.contactlist.utilities.ApiAllureUtil;
 import io.qameta.allure.*;
 import io.restassured.response.Response;
 import com.cheq.contactlist.listeners.RetryAnalyzer;
 import com.cheq.contactlist.models.contactrequestmodel.CreateContact;
 import org.testng.annotations.Test;
-import com.cheq.contactlist.payloads.contacts.ContactPayload;
+import com.cheq.contactlist.payloads.contacts.AddContactPayload;
 import com.cheq.contactlist.services.ContactService;
 
 
 @Epic("Contact List API Testing")
-@Feature("AddContact Management")
+@Feature("Add Contact Management")
 public class TC011AddMultipleContactTest extends Hooks {
 
 
@@ -28,10 +28,10 @@ public class TC011AddMultipleContactTest extends Hooks {
     )
     public void testAddMultipleContactSuccessfully() {
 
-        Response createUserResponse = UserService.createUser(CreateUserPayload.createValidUser());
+        Response createUserResponse = UserService.createUser(CreateUserPayload.createValidUser(0));
         String dynamicToken = createUserResponse.jsonPath().getString("token");
 
-        CreateContact payload = ContactPayload.createValidContact();
+        CreateContact payload = AddContactPayload.createValidContact(0);
 
         for (int i = 1; i <= 5; i++) {
             Response response = ContactService.addContact(dynamicToken, payload);

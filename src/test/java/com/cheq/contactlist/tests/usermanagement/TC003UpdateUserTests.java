@@ -13,7 +13,7 @@ import com.cheq.contactlist.services.UserService;
 
 
 @Epic("Contact List API Testing")
-@Feature("User Management")
+@Feature("Add User Management")
 public class TC003UpdateUserTests extends Hooks {
 
     @Test(
@@ -23,7 +23,7 @@ public class TC003UpdateUserTests extends Hooks {
     )
     public void testUpdateUser() {
 
-        Response createUserResponse = UserService.createUser(CreateUserPayload.createValidUser());
+        Response createUserResponse = UserService.createUser(CreateUserPayload.createValidUser(0));
         String dynamicToken = createUserResponse.jsonPath().getString("token");
 
         UpdateUser payload = UpdateUserPayload.updateValidUser();

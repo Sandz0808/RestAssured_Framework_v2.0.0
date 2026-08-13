@@ -100,7 +100,6 @@
             <version>${restassured.version}</version>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 
 

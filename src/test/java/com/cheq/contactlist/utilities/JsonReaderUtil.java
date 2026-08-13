@@ -1,4 +1,4 @@
-package com.cheq.contactlist.utils;
+package com.cheq.contactlist.utilities;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,6 +31,7 @@ public class JsonReaderUtil {
 
 
     // HELPER FOR JASON FILE IN NODE
+    // USAGE: String email = JsonReaderUtil.getDataNOde("userLogin", "ValidCredential", "email");
     public static String getDataNOde(String fileName, String objectName,  String key) {
         return readDataNode("testdata", fileName, objectName, key);
     }

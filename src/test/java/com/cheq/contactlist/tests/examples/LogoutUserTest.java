@@ -2,7 +2,7 @@ package com.cheq.contactlist.tests.examples;
 
 import io.restassured.RestAssured;
 import org.testng.annotations.Test;
-import com.cheq.contactlist.utils.JsonReaderUtil;
+import com.cheq.contactlist.utilities.JsonReaderUtil;
 
 import static io.restassured.RestAssured.*;
 

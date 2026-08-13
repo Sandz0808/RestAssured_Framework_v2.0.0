@@ -5,7 +5,7 @@ import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import com.cheq.contactlist.utils.SaveResponseUtil;
+import com.cheq.contactlist.utilities.SaveResponseUtil;
 
 import java.util.HashMap;
 import java.util.Map;

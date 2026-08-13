@@ -1,12 +1,12 @@
 package com.cheq.contactlist.services;
 
+import com.cheq.contactlist.specifications.RequestSpecs;
 import io.restassured.response.Response;
 import com.cheq.contactlist.models.userrequestmodel.LoginRequest;
 import org.slf4j.Logger;
-import com.cheq.contactlist.utils.LoggerUtil;
-import com.cheq.contactlist.utils.SaveResponseUtil;
+import com.cheq.contactlist.utilities.LoggerUtil;
+import com.cheq.contactlist.utilities.SaveResponseUtil;
 import static com.cheq.contactlist.constants.EndpointConstant.*;
-import static com.cheq.contactlist.specs.RequestSpec.*;
 import static io.restassured.RestAssured.given;
 
 public class AuthService {
@@ -21,21 +21,12 @@ public class AuthService {
         log.info(" Method  : POST");
 
         Response response = given()
-                .spec(authRequestSpec(token))
+                .spec(RequestSpecs.requestSpec(token))
                 .when()
                 .post(LOGOUT_USER); // e.g., POST /users/logout
 
-        if (response.statusCode() == 200) {
-
-            log.info("  Status Code : {}", response.statusCode());
-            log.info(" Response Time  : {} ms", response.time());
-
-        } else {
-
-            log.error("Failed to logout user");
-            org.testng.Assert.fail("Failed to logout user.");
-
-        }
+        log.info("  Status Code : {}", response.statusCode());
+        log.info(" Response Time  : {} ms", response.time());
 
         return response;
     }
@@ -43,30 +34,26 @@ public class AuthService {
 
     public static Response loginUser(LoginRequest payload) {
 
-        log.info(" ==========  USER LOGIN  ==========");
-        log.info("Endpoint: {}", LOGIN_USER);
-        log.info(" Method : POST");
+        log.info("========== USER LOGIN ==========");
+        log.info("Endpoint : {}", LOGIN_USER);
+        log.info("Method   : POST");
 
-        Response response =  given()
-                .spec(getRequestSpec())
+        Response response = given()
+                .spec(RequestSpecs.requestSpec())
                 .body(payload)
                 .when()
-                .post(LOGIN_USER); // e.g., POST /users/login
+                .post(LOGIN_USER);
+
+        log.info("Status Code  : {}", response.statusCode());
+        log.info("Response Time: {} ms", response.time());
+
 
         if (response.statusCode() == 200) {
 
-            log.info("Status Code : {}", response.statusCode());
-            log.info("Response Time  : {} ms", response.time());
-
-        } else {
-
-            log.error("Failed to login user");
-            org.testng.Assert.fail("Failed to login user.");
+            SaveResponseUtil.saveResponseBody(response, "LoginResponse");
+            log.info("Response saved to LoginResponse.json");
 
         }
-
-        SaveResponseUtil.saveResponseBody(response, "LoginResponse");
-        log.info(" Response saved to UpdateUserResponse.json");
 
         return response;
     }

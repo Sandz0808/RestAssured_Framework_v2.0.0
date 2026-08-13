@@ -1,4 +1,4 @@
-package com.cheq.contactlist.utils;
+package com.cheq.contactlist.utilities;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

@@ -1,7 +1,7 @@
-package com.cheq.contactlist.assertions.auth;
+package com.cheq.contactlist.assertions.authentication;
 
 import com.cheq.contactlist.assertions.common.CommonAssertions;
-import com.cheq.contactlist.utils.LoggerUtil;
+import com.cheq.contactlist.utilities.LoggerUtil;
 import io.qameta.allure.Allure;
 import io.restassured.response.Response;
 import org.slf4j.Logger;

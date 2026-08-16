@@ -416,4 +416,32 @@ public class ValidationAssertions {
         }
     }
 
+    public static void verifyResponseBodyIsEmpty(Response response) {
+
+        log.info("Verifying Response Body Is Empty.");
+
+        try {
+
+            Allure.step("Verify Response Body Is Empty", () -> {
+
+                String responseBody = response.getBody().asString();
+
+                Allure.addAttachment(
+                        "Response Body",
+                        responseBody.isBlank() ? "{}" : responseBody);
+
+                Assert.assertTrue(
+                        responseBody.trim().isEmpty(),
+                        "Response body should be empty.");
+            });
+
+            log.info("Response body is empty verification passed.");
+
+        } catch (AssertionError e) {
+
+            log.error("Response body is empty verification failed.", e);
+            throw e;
+        }
+    }
+
 }

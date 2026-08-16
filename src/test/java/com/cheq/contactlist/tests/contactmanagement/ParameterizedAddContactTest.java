@@ -3,11 +3,7 @@ package com.cheq.contactlist.tests.contactmanagement;
 import com.cheq.contactlist.assertions.common.CommonAssertions;
 import com.cheq.contactlist.hooks.Hooks;
 import com.cheq.contactlist.listeners.RetryAnalyzer;
-import com.cheq.contactlist.models.contactrequestmodel.CreateContact;
-import com.cheq.contactlist.payloads.contacts.AddContactPayload;
-import com.cheq.contactlist.payloads.users.CreateUserPayload;
-import com.cheq.contactlist.services.ContactService;
-import com.cheq.contactlist.services.UserService;
+import com.cheq.contactlist.tests.reusables.ReusableTest;
 import com.cheq.contactlist.utilities.JsonReaderUtil;
 import com.cheq.contactlist.utilities.LoggerUtil;
 import io.qameta.allure.Allure;
@@ -20,11 +16,10 @@ import org.testng.annotations.Test;
 
 @Epic("Contact List API Testing")
 @Feature("Parameterized Add Contact")
-public class TC014ParameterizedAddContactTest extends Hooks {
+public class ParameterizedAddContactTest extends Hooks {
 
     private static final Logger log =
-            LoggerUtil.getLogger(TC014ParameterizedAddContactTest.class);
-
+            LoggerUtil.getLogger(ParameterizedAddContactTest.class);
 
     @DataProvider(name = "addContactTestData")
     public Object[][] addContactTestData() {
@@ -35,26 +30,27 @@ public class TC014ParameterizedAddContactTest extends Hooks {
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
             groups = {"sanity", "contact", "test"},
-            description = "TC014-Parameterized Add Contact That Covers Negative Scenarios",
+            description = "Parameterized Add Contact That Covers Negative Scenarios",
             dataProvider = "addContactTestData"
     )
     public void testParameterizedAddContact(int index) {
 
-        Response createUserResponse = UserService.createUser(CreateUserPayload.createValidUser(0));
-        String dynamicToken = createUserResponse.jsonPath().getString("token");
+        // PROCESS THE ITERATION OF ADD CONTACT TEST DATA - addContact.json
+        Response response = ReusableTest.addContactParameterized(index);
 
-        CreateContact payload = AddContactPayload.createValidContact(index);
-        Response response = ContactService.addContact(dynamicToken, payload);
-
+        // EXTRACT THE EXPECTED RESULT CODE FROM THE TEST DATA TO BE USE IN ASSERTION
         int expectedStatusCode = Integer.parseInt(JsonReaderUtil.getDatalist("addContact", index, "expectedStatusCode"));
 
+        // EXTRACT THE SCENARIO FROM THE TEST DATA TO BE USE IN ALLURE REPORT TAGGING
         String scenario = JsonReaderUtil.getDatalist("addContact", index, "scenario");
 
+        // ALLURE FEATURE TO REFLECT THE ITERATED RUN IN THE ALLURE REPORT ONE BY ONE
         Allure.getLifecycle().updateTestCase(testResult -> testResult.setName(scenario));
 
-
+        // PUT LOGGER FOR EASY IDENTIFY THE RUN IN THE LOGS AND EASY DEBUGGING
         log.info("=========== {} ===========", scenario);
 
+        // COMMON ASSERTIONS
         CommonAssertions.verifyStatusCode( response, expectedStatusCode);
         CommonAssertions.verifyResponseTime(response, 2000);
     }

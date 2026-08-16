@@ -5,7 +5,7 @@ import com.cheq.contactlist.hooks.Hooks;
 import com.cheq.contactlist.listeners.RetryAnalyzer;
 import com.cheq.contactlist.models.userrequestmodel.CreateUser;
 import com.cheq.contactlist.payloads.users.CreateUserPayload;
-import com.cheq.contactlist.services.AuthService;
+import com.cheq.contactlist.services.AuthenticationService;
 import com.cheq.contactlist.services.UserService;
 import com.cheq.contactlist.utilities.JsonReaderUtil;
 import com.cheq.contactlist.utilities.LoggerUtil;
@@ -17,16 +17,14 @@ import org.slf4j.Logger;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import java.io.Console;
-
 
 @Epic("Contact List API Testing")
 @Feature("Parameterized Add User")
 
-public class TC013ParameterizedSignupTest extends Hooks {
+public class ParameterizedSignupTest extends Hooks {
 
     private static final Logger log =
-            LoggerUtil.getLogger(AuthService.class);
+            LoggerUtil.getLogger(AuthenticationService.class);
 
     @DataProvider(name = "createUserTestData")
     public Object[][] createUserTestData() {
@@ -38,7 +36,7 @@ public class TC013ParameterizedSignupTest extends Hooks {
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
             groups = {"sanity", "user", "test"},
-            description = "TC013-Parameterized User Signup That Covers Negative Scenarios",
+            description = "Parameterized User Signup That Covers Negative Scenarios",
             dataProvider = "createUserTestData"
     )
     public void testParameterizedUserSignup(int index) {

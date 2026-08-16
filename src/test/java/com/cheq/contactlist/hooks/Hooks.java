@@ -1,7 +1,7 @@
 package com.cheq.contactlist.hooks;
 
 import com.cheq.contactlist.specifications.RequestSpecs;
-import com.cheq.contactlist.utilities.ApiAllureUtil;
+import com.cheq.contactlist.utilities.AllureUtil;
 import com.cheq.contactlist.utilities.ConfigReader;
 import com.cheq.contactlist.utilities.LoggerUtil;
 import io.restassured.RestAssured;
@@ -58,8 +58,8 @@ public class Hooks extends RequestSpecs {
         env.put("Report", "Allure");
         env.put("Logger", "Logback");
 
-        ApiAllureUtil.writeAllureEnvironment(env);
-        ApiAllureUtil.writeAllureExecutor();
+        AllureUtil.writeAllureEnvironment(env);
+        AllureUtil.writeAllureExecutor();
     }
 
     @BeforeMethod(alwaysRun = true)
@@ -70,7 +70,7 @@ public class Hooks extends RequestSpecs {
         log.info("========== START {} ==========", result.getMethod().getMethodName());
 
         log.info("Executing Test : {}", result.getMethod().getMethodName());
-        ApiAllureUtil.attachText("Executing Test:", result.getMethod().getMethodName());
+        AllureUtil.attachText("Executing Test:", result.getMethod().getMethodName());
 
     }
 
@@ -84,19 +84,19 @@ public class Hooks extends RequestSpecs {
 
                 case ITestResult.SUCCESS -> {
                     log.info("PASSED : {}", result.getMethod().getMethodName());
-                    ApiAllureUtil.attachText("PASSED:", result.getMethod().getMethodName());
+                    AllureUtil.attachText("PASSED:", result.getMethod().getMethodName());
                 }
 
                 case ITestResult.FAILURE -> {
                     log.error("FAILED : {}", result.getMethod().getMethodName(),
                             result.getThrowable());
-                    ApiAllureUtil.attachText("FAILED:", result.getMethod().getMethodName());
-                    ApiAllureUtil.attachException(result.getThrowable());
+                    AllureUtil.attachText("FAILED:", result.getMethod().getMethodName());
+                    AllureUtil.attachException(result.getThrowable());
                 }
 
                 case ITestResult.SKIP -> {
                     log.warn("SKIPPED : {}", result.getMethod().getMethodName());
-                    ApiAllureUtil.attachText("FAILED:", result.getMethod().getMethodName());
+                    AllureUtil.attachText("FAILED:", result.getMethod().getMethodName());
 
                 }
 

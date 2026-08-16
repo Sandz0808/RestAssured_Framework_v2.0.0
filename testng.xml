@@ -15,6 +15,8 @@
         <!-- Retry Mechanism -->
         <listener class-name="com.cheq.contactlist.listeners.RetryTransformer"/>
 
+        <listener class-name="com.cheq.contactlist.listeners.AllureLogListener"/>
+
     </listeners>
 
 
@@ -31,7 +33,7 @@
 
         <packages>
 
-            <package name="com.cheq.contactlist.tests.examples"/>
+            <package name="com.cheq.contactlist.tests.security"/>
 
             <package name="com.cheq.contactlist.tests.authentication"/>
 

@@ -1,46 +1,41 @@
 package com.cheq.contactlist.tests.usermanagement;
 
-import com.cheq.contactlist.assertions.authentication.AuthAssertions;
 import com.cheq.contactlist.assertions.common.CommonAssertions;
-import com.cheq.contactlist.assertions.schema.SchemaAssertions;
 import com.cheq.contactlist.hooks.Hooks;
-import com.cheq.contactlist.utilities.JsonReaderUtil;
+import com.cheq.contactlist.payloads.users.CreateUserPayload;
 import io.qameta.allure.*;
 import io.restassured.response.Response;
 import com.cheq.contactlist.listeners.RetryAnalyzer;
-import com.cheq.contactlist.models.userrequestmodel.CreateUser;
 import org.testng.annotations.Test;
-import com.cheq.contactlist.payloads.users.CreateUserPayload;
 import com.cheq.contactlist.services.UserService;
-
 import static com.cheq.contactlist.constants.HeaderConstant.*;
 import static com.cheq.contactlist.constants.StatusCodeConstant.*;
 
 
 @Epic("Contact List API Testing")
 @Feature("Add User Management")
-public class TC001CreateUserTests extends Hooks {
+public class ReadUserTest extends Hooks {
 
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
-            groups = {"sanity", "user", "test",},
-            description = "TC-001 Successful user creation"
+            groups = {"smoke", "user", "test"},
+            description = "Validate Successful read user"
     )
+    public void testReadUser() {
 
-    public void testSuccessfulUserSignup() {
+        Response createUserResponse = UserService.createUser(CreateUserPayload.createValidUser(0));
+        String dynamicToken = createUserResponse.jsonPath().getString("token");
 
-        CreateUser payload = CreateUserPayload.createValidUser(0);
-        Response response = UserService.createUser(payload);
+        Response response = UserService.readUser(dynamicToken);
 
-
-        CommonAssertions.verifyStatusCode(response, CREATED);
+        CommonAssertions.verifyStatusCode(response, OK);
         CommonAssertions.verifyHeader(response, CONTENT_TYPE, "application/json; charset=utf-8");
         CommonAssertions.verifyResponseTime(response, 2000);
         CommonAssertions.verifyBodyContainsText(response, "Sandrex");
         CommonAssertions.verifyResponseBody(response);
-        AuthAssertions.verifyAuthorizationToken(response.jsonPath().getString("token"));
+        CommonAssertions.verifyResponseHeaders(response);
 
-        SchemaAssertions.verifySchema(response, SchemaAssertions.SchemaType.CREATE_USER_SCHEMA);
+
 
     }
 }

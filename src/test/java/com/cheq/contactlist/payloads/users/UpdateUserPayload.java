@@ -7,7 +7,7 @@ public class UpdateUserPayload {
 
     public static UpdateUser updateValidUser() {
 
-        String random = UUID.randomUUID().toString().substring(0, 8);
+        String random = UUID.randomUUID().toString().substring(0, 4);
 
         UpdateUser user = new UpdateUser();
 

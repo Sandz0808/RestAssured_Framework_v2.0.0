@@ -4,52 +4,43 @@ import com.cheq.contactlist.assertions.common.CommonAssertions;
 import com.cheq.contactlist.assertions.schema.SchemaAssertions;
 import com.cheq.contactlist.assertions.validation.ValidationAssertions;
 import com.cheq.contactlist.hooks.Hooks;
-import com.cheq.contactlist.payloads.users.CreateUserPayload;
-import com.cheq.contactlist.services.UserService;
-import com.cheq.contactlist.utilities.ApiAllureUtil;
+import com.cheq.contactlist.tests.reusables.ReusableTest;
+import com.cheq.contactlist.utilities.AllureUtil;
 import io.qameta.allure.*;
 import io.restassured.response.Response;
 import com.cheq.contactlist.listeners.RetryAnalyzer;
-import com.cheq.contactlist.models.contactrequestmodel.CreateContact;
 import org.testng.annotations.Test;
-import com.cheq.contactlist.payloads.contacts.AddContactPayload;
-import com.cheq.contactlist.services.ContactService;
 
 
 @Epic("Contact List API Testing")
 @Feature("Add Contact Management")
-public class TC011AddMultipleContactTest extends Hooks {
-
+public class CreateContactTest extends Hooks {
 
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
             groups = {"smoke", "contact", "test"},
-            description = "TC011-Successful add multiple contact"
+            description = "Validate Successful Add Contact"
     )
-    public void testAddMultipleContactSuccessfully() {
+    public void testAddContactSuccessfully() {
 
-        Response createUserResponse = UserService.createUser(CreateUserPayload.createValidUser(0));
-        String dynamicToken = createUserResponse.jsonPath().getString("token");
+        // login Process
+        Response signUpResponse = ReusableTest.signUp(0);
+        // Extract the token from the login response body
+        String token = signUpResponse.jsonPath().getString("token");
 
-        CreateContact payload = AddContactPayload.createValidContact(0);
+        // pass the Token and add contact process
+        Response response = ReusableTest.addContact(token);
 
-        for (int i = 1; i <= 5; i++) {
-            Response response = ContactService.addContact(dynamicToken, payload);
-
-        ApiAllureUtil.steps("Validate Successful contact creation:     " + i + "");
+        // Assertions
+        AllureUtil.steps("Validate Successful contact creation");
         CommonAssertions.verifyStatusCode(response, 201);
         CommonAssertions.verifyHeader(response, "Content-Type", "application/json; charset=utf-8");
         CommonAssertions.verifyResponseTime(response, 2000);
         CommonAssertions.verifyBodyContainsText(response, "John");
         CommonAssertions.verifyResponseBody(response);
         SchemaAssertions.verifySchema(response, SchemaAssertions.SchemaType.CREATE_CONTACT_SCHEMA);
-
         ValidationAssertions.verifyFieldEquals(response, "firstName", "John");
         ValidationAssertions.verifyFieldExists(response, "email");
-
-        }
-
-
 
     }
 }

@@ -35,12 +35,12 @@ import java.util.Map;
 
  * ============================================================
  */
-public final class ApiAllureUtil {
+public final class AllureUtil {
 
 	private static final Logger log =
-			LoggerUtil.getLogger(ApiAllureUtil.class);
+			LoggerUtil.getLogger(AllureUtil.class);
 
-	private ApiAllureUtil() {
+	private AllureUtil() {
 	}
 
 	// ==========================================================

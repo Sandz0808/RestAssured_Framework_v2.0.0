@@ -39,3 +39,18 @@ Remove in TestRunner.java:
 "html:target/cucumber-html-report",
 Replace with:
 "io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm“
+
+================================================================
+ALLURE REPORTING - NEED IN GRAPH
+
+// -- COPY THE ALLURE HISTORY
+xcopy /E /I /Y target\allure-report\history target\allure-results\history
+
+
+// IT SHOULD BE RUN TO GET THE HISTORY
+allure generate target/allure-results --output target/allure-report
+
+// TO COPY THE HISTORY - RUN IN TERMINAL
+Copy-Item -Path "target/allure-report/history" `
+          -Destination "target/allure-results/history" `
+          -Recurse -Force

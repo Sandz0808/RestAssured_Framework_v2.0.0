@@ -1,6 +1,6 @@
 package com.cheq.contactlist.tests.usermanagement;
 
-import com.cheq.contactlist.assertions.common.*;
+import com.cheq.contactlist.assertions.common.CommonAssertions;
 import com.cheq.contactlist.hooks.Hooks;
 import com.cheq.contactlist.payloads.users.CreateUserPayload;
 import io.qameta.allure.*;
@@ -14,12 +14,12 @@ import com.cheq.contactlist.services.UserService;
 
 @Epic("Contact List API Testing")
 @Feature("Add User Management")
-public class TC003UpdateUserTests extends Hooks {
+public class UpdateUserTests extends Hooks {
 
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
             groups = {"smoke", "user", "test"},
-            description = "TC003-Successful update user"
+            description = "Validate Successful update user"
     )
     public void testUpdateUser() {
 

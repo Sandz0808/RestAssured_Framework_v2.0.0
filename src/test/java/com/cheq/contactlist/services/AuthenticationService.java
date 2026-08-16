@@ -9,10 +9,10 @@ import com.cheq.contactlist.utilities.SaveResponseUtil;
 import static com.cheq.contactlist.constants.EndpointConstant.*;
 import static io.restassured.RestAssured.given;
 
-public class AuthService {
+public class AuthenticationService {
 
     private static final Logger log =
-            LoggerUtil.getLogger(AuthService.class);
+            LoggerUtil.getLogger(AuthenticationService.class);
 
     public static Response logoutUser(String token) {
 

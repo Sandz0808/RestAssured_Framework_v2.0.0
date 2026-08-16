@@ -18,8 +18,6 @@ public class ContactService {
     // CREATE: Add a new contact (Requires Auth Token & Body)
     // =================================================================
     public static Response addContact(String token, CreateContact payload) {
-
-        log.info("========================================");
         log.info("========== ADD CONTACT ==========");
         log.info("Endpoint : {}", ADD_CONTACT);
         log.info("Method   : POST");
@@ -61,7 +59,6 @@ public class ContactService {
 
     public static Response getContact(String token, String contactId) {
 
-        log.info("======================================== ");
         log.info("==========  READ CONTACT ==========");
         log.info("Endpoint: {}", GET_CONTACT);
         log.info("Method  : GET");
@@ -82,7 +79,6 @@ public class ContactService {
     // UPDATE: Update a Contact fully (Requires Auth Token, Path Param, & Body)
     // =================================================================
     public static Response updateContact(String token, String contactId, UpdateContact payload) {
-        log.info(" ========================================");
         log.info("==========  UPDATE CONTACT ========== ");
         log.info(" Endpoint: {} ", UPDATE_CONTACT);
         log.info("Method  : PUT ");
@@ -123,7 +119,6 @@ public class ContactService {
     // DELETE: Remove a Contact (Requires Auth Token & Path Param)
     // =================================================================
     public static Response deleteContact(String token, String contactId) {
-        log.info(" ======================================== ");
         log.info("==========  DELETE CONTACT  ==========");
         log.info("  Endpoint: {}", DELETE_CONTACT);
         log.info(" Method  : DELETED");
@@ -139,5 +134,23 @@ public class ContactService {
 
         return response;
     }
+
+    public static Response addContactWithIdempotencyKey(
+            String token,
+            CreateContact payload,
+            String idempotencyKey) {
+
+        log.info(" ========== ADD CONTACT WITH IDEMPOTENCY ==========");
+        log.info(" Endpoint : {}", ADD_CONTACT);
+        log.info(" Method   : POST");
+
+        return given()
+                .spec(RequestSpecs.requestSpec(token))
+                .header("Idempotency-Key", idempotencyKey)
+                .body(payload)
+                .post(ADD_CONTACT);
+    }
+
+
 
 }

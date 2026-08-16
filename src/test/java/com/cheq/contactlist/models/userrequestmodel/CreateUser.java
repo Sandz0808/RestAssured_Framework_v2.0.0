@@ -10,6 +10,7 @@ public class CreateUser {
     public CreateUser() {
     }
 
+    // --- SETTERS
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }

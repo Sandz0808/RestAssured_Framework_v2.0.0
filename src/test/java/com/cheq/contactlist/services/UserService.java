@@ -94,4 +94,19 @@ public class UserService {
 
         return response;
     }
+
+    public static Response createUserWithIdempotencyKey(
+            CreateUser payload,
+            String idempotencyKey) {
+
+        log.info(" ========== CREATE USER WITH IDEMPOTENCY ==========");
+        log.info("Endpoint  : {}", CREATE_USER);
+        log.info("Method  : POST");
+
+        return given()
+                .spec(RequestSpecs.requestSpec())
+                .header("Idempotency-Key", idempotencyKey)
+                .body(payload)
+                .post(CREATE_USER);
+    }
 }

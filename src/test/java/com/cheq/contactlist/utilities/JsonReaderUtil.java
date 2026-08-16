@@ -18,7 +18,6 @@ public class JsonReaderUtil {
         // Prevent instantiation
     }
 
-
     // HELPER FOR JASON FILE THAT NOT IN LIST
     public static String getData(String fileName, String key) {
         return readData("testdata", fileName, key);

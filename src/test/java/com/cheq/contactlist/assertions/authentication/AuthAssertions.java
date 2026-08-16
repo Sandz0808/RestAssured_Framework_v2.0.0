@@ -42,7 +42,7 @@ public class AuthAssertions {
     }
 
 
-    public static void verifyTokenExists(String token) {
+    public static void verifyTokenExists(Response response) {
 
         log.info("Verifying Authentication Token Exists.");
 
@@ -50,9 +50,11 @@ public class AuthAssertions {
 
             Allure.step("Verify Authentication Token Exists", () -> {
 
+                String token = response.jsonPath().getString("token");
+
                 String sanitizedToken = (token == null || token.isBlank())
                         ? "{}"
-                        : "🙈🙃🛡️✨👻🥷";
+                        : "Token*******";
 
                 Allure.addAttachment(
                         "Authentication Token",
@@ -78,7 +80,7 @@ public class AuthAssertions {
 
 
 
-    public static void verifyTokenDoesNotExist(String token) {
+    public static void verifyTokenDoesNotExist(Response response) {
 
         log.info("Verifying Authentication Token Does Not Exist.");
 
@@ -86,9 +88,11 @@ public class AuthAssertions {
 
             Allure.step("Verify Authentication Token Does Not Exist", () -> {
 
+                String token = response.jsonPath().getString("token");
+
                 String sanitizedToken = (token == null || token.isBlank())
                         ? "{}"
-                        : "🙈🙃🛡️✨👻🥷";
+                        : "Token******";
 
                 Allure.addAttachment(
                         "Authentication Token",
@@ -149,13 +153,15 @@ public class AuthAssertions {
     }
 
 
-    public static void verifyJwtFormat(String token) {
+    public static void verifyJwtFormat(Response response) {
 
         log.info("Verifying JWT Token Format.");
 
         try {
 
             Allure.step("Verify JWT Token Format", () -> {
+
+                String token = response.jsonPath().getString("token");
 
                 String sanitizedToken = (token == null || token.isBlank())
                         ? "{}"

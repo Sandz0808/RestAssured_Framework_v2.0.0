@@ -12,12 +12,12 @@ import com.cheq.contactlist.services.UserService;
 
 @Epic("Contact List API Testing")
 @Feature("Add User Management")
-public class TC004DeleteUserTest extends Hooks {
+public class DeleteUserTest extends Hooks {
 
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
             groups = {"smoke", "user", "test"},
-            description = "TC004-Successful delete user"
+            description = "Validate Successful delete user"
     )
     public void testDeleteUser() {
 

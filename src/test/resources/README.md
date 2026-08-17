@@ -129,11 +129,11 @@ pom.xml
 src
 ├── main
 │   └── java
-│       └── com.cheq.contactlist
+│       └── com.cheq.application
 │
 └── test
     ├── java
-    │   └── com.cheq.contactlist
+    │   └── com.cheq.application
     │
     └── resources
         ├── testdata

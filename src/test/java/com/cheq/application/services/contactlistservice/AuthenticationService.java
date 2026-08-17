@@ -1,0 +1,61 @@
+package com.cheq.application.services.contactlistservice;
+
+import com.cheq.application.specifications.RequestSpecs;
+import io.restassured.response.Response;
+import com.cheq.application.models.contactlistmodel.userrequestmodel.LoginRequest;
+import org.slf4j.Logger;
+import com.cheq.application.utilities.LoggerUtil;
+import com.cheq.application.utilities.SaveResponseUtil;
+import static com.cheq.application.constants.contactlistconstant.EndpointConstant.*;
+import static io.restassured.RestAssured.given;
+
+public class AuthenticationService {
+
+    private static final Logger log =
+            LoggerUtil.getLogger(AuthenticationService.class);
+
+    public static Response logoutUser(String token) {
+
+        log.info("========== USER LOGOUT ==========");
+        log.info(" Endpoint: {}", LOGOUT_USER);
+        log.info(" Method  : POST");
+
+        Response response = given()
+                .spec(RequestSpecs.requestSpec(token))
+                .when()
+                .post(LOGOUT_USER); // e.g., POST /users/logout
+
+        log.info("  Status Code : {}", response.statusCode());
+        log.info(" Response Time  : {} ms", response.time());
+
+        return response;
+    }
+
+
+    public static Response loginUser(LoginRequest payload) {
+
+        log.info("========== USER LOGIN ==========");
+        log.info("Endpoint : {}", LOGIN_USER);
+        log.info("Method   : POST");
+
+        Response response = given()
+                .spec(RequestSpecs.requestSpec())
+                .body(payload)
+                .when()
+                .post(LOGIN_USER);
+
+        log.info("Status Code  : {}", response.statusCode());
+        log.info("Response Time: {} ms", response.time());
+
+
+        if (response.statusCode() == 200) {
+
+            SaveResponseUtil.saveResponseBody(response, "LoginResponse");
+            log.info("Response saved to LoginResponse.json");
+
+        }
+
+        return response;
+    }
+
+}

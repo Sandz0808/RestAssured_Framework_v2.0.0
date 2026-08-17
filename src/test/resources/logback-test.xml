@@ -59,7 +59,7 @@
     <!-- ====================================================== -->
 
     <appender name="ALLURE_CAPTURE"
-              class="com.cheq.contactlist.utilities.AllureLogAppender"/>
+              class="com.cheq.application.utilities.AllureLogAppender"/>
 
 
     <!-- ====================================================== -->

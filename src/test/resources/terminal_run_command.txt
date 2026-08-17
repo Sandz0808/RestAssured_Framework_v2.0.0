@@ -7,6 +7,9 @@ mvn clean test -Dgroups=debug
 // execute in selected env and selected groups
 mvn clean test -Denv=staging -Dgroups=debug
 
+// EXECUTE WITH DEFINED APPLICATION
+mvn clean test -Dapp=contactlist -Dconfig=staging -Dgroups=test
+
 =======================================================================
 
 

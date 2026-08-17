@@ -13,9 +13,9 @@
     <listeners>
 
         <!-- Retry Mechanism -->
-        <listener class-name="com.cheq.contactlist.listeners.RetryTransformer"/>
+        <listener class-name="com.cheq.application.listeners.RetryTransformer"/>
 
-        <listener class-name="com.cheq.contactlist.listeners.AllureLogListener"/>
+        <listener class-name="com.cheq.application.listeners.AllureLogListener"/>
 
     </listeners>
 
@@ -32,15 +32,16 @@
         <!-- ================================================= -->
 
         <packages>
+            <!-- =============== CONTACT LIST =================== -->
+            <package name="com.cheq.application.tests.contactlist.security"/>
+            <package name="com.cheq.application.tests.contactlist.authentication"/>
+            <package name="com.cheq.application.tests.contactlist.usermanagement"/>
+            <package name="com.cheq.application.tests.contactlist.contactmanagement"/>
 
-            <package name="com.cheq.contactlist.tests.security"/>
-
-            <package name="com.cheq.contactlist.tests.authentication"/>
-
-            <package name="com.cheq.contactlist.tests.usermanagement"/>
-
-            <package name="com.cheq.contactlist.tests.contactmanagement"/>
-
+            <!-- =============== PLAID =================== -->
+            <package name="com.cheq.application.tests.plaid.linktoken"/>
+            <package name="com.cheq.application.tests.plaid.auth"/>
+            <package name="com.cheq.application.tests.plaid.transactions"/>
         </packages>
 
     </test>

@@ -1,0 +1,15 @@
+PLAID STATUS: 200
+PLAID RESPONSE: {
+    "public_token": "public-sandbox-1dc1f242-dc80-456a-a1ac-a92e11848af5",
+    "request_id": "8bc70464f588bf3"
+}
+Verifying Success Status Code. Expected: 200
+Status Code verification passed.
+Verifying Header: Content-Type
+Header 'Content-Type' verification passed.
+Verifying field 'public_token' exists.
+Field 'public_token' existence verification passed.
+Verifying field 'request_id' exists.
+Field 'request_id' existence verification passed.
+Verifying Response Body.
+Response Body verification passed.

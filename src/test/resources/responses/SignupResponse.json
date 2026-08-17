@@ -1,10 +1,10 @@
 {
   "user" : {
-    "_id" : "6a83157c9e72190015776a50",
+    "_id" : "6a83323445ef890015ddda86",
     "firstName" : "Sandrex",
     "lastName" : "Jimenez",
-    "email" : "dorothy.murphy@yahoo.com",
+    "email" : "roy.kub@hotmail.com",
     "__v" : 1
   },
-  "token" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTgzMTU3YzllNzIxOTAwMTU3NzZhNTAiLCJpYXQiOjE3ODY5NzU2MTJ9.g73cM-O4RZ4WAp2oqQYc6Hmj_TSc1jeuyDlGF_-AnqQ"
+  "token" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTgzMzIzNDQ1ZWY4OTAwMTVkZGRhODYiLCJpYXQiOjE3ODY5ODI5NjR9.pwZ0jcZCvTspOWUQ8arGp7SKwSJSZmF3WeFNuvaMApY"
 }

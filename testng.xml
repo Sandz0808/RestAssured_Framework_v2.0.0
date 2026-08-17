@@ -4,7 +4,7 @@
 
 <suite name="API Automation Suite"
        parallel="classes"
-       thread-count="3">
+       thread-count="1">
 
     <!-- ===================================================== -->
     <!-- LISTENERS -->
@@ -16,6 +16,10 @@
         <listener class-name="com.cheq.application.listeners.RetryTransformer"/>
 
         <listener class-name="com.cheq.application.listeners.AllureLogListener"/>
+
+        <listener class-name="com.cheq.application.listeners.DynamicThreadCountListener"/>
+
+        <listener class-name="com.cheq.application.listeners.ParallelExecutionListener"/>
 
     </listeners>
 

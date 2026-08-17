@@ -1,0 +1,16 @@
+{
+    "_id": "*** Sensitive data is Masked for security! ***",
+    "firstName": "John",
+    "lastName": "Doe",
+    "birthdate": "1990-01-01",
+    "email": "sjimena_1786967169162@example.com",
+    "phone": "09123456789",
+    "street1": "Street 1",
+    "street2": "Subdivision",
+    "city": "Makati",
+    "stateProvince": "Metro Manila",
+    "postalCode": "1200",
+    "country": "Philippines",
+    "owner": "*** Sensitive data is Masked for security! ***",
+    "__v": 0
+}

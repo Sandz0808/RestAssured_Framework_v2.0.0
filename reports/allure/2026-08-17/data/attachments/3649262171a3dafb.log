@@ -1,0 +1,11 @@
+========== USER LOGIN ==========
+Endpoint : /users/login
+Method   : POST
+Status Code  : 200
+Response Time: 1288 ms
+Response saved to LoginResponse.json
+=========== Validate_Created_for_Valid_Details ===========
+Verifying Success Status Code. Expected: 200
+Status Code verification passed.
+Verifying Response Time. Threshold: 2000 ms
+Response Time verification passed.

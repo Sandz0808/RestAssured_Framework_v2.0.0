@@ -1,0 +1,6 @@
+{
+    "expiration": "2026-08-17T13:01:05Z",
+    "hosted_link_url": "https://secure.plaid.com/hl/ls38pspr9353q798n1o7o188o061pp8069",
+    "link_token": "*** Sensitive data is Masked for security! ***",
+    "request_id": "*** Sensitive data is Masked for security! ***"
+}

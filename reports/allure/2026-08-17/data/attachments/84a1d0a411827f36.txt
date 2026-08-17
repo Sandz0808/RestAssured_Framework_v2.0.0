@@ -1,0 +1,2 @@
+Field Name : public_token
+Actual Value: public-sandbox-d9f879c8-0ae8-456c-acda-7fc5ad045b2c

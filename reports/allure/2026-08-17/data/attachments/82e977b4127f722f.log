@@ -1,0 +1,21 @@
+PLAID STATUS: 200
+PLAID RESPONSE: {
+    "expiration": "2026-08-17T10:09:19Z",
+    "hosted_link_url": "https://secure.plaid.com/hl/lsn71570r84q0q9297o1114q3p302p26s2",
+    "link_token": "link-sandbox-a26025e3-9d5d-4742-b666-9d8c857c71f7",
+    "request_id": "e4922b44d0d45fe"
+}
+Verifying Success Status Code. Expected: 200
+Status Code verification passed.
+Verifying Header: Content-Type
+Header 'Content-Type' verification passed.
+Verifying field 'link_token' exists.
+Field 'link_token' existence verification passed.
+Verifying field 'expiration' exists.
+Field 'expiration' existence verification passed.
+Verifying field 'request_id' exists.
+Field 'request_id' existence verification passed.
+Verifying field 'hosted_link_url' exists.
+Field 'hosted_link_url' existence verification passed.
+Verifying Response Body.
+Response Body verification passed.

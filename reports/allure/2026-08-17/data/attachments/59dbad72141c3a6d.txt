@@ -1,0 +1,7 @@
+{
+    "_id": "*** Sensitive data is Masked for security! ***",
+    "firstName": "Updated_3235",
+    "lastName": "Updated_3235",
+    "email": "updated_3235@example.com",
+    "__v": 1
+}

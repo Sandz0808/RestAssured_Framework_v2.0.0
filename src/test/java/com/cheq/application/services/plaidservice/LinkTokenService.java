@@ -15,7 +15,7 @@ import static io.restassured.RestAssured.given;
 public class LinkTokenService {
 
     private static final Logger log =
-            LoggerUtil.getLogger(AuthenticationService.class);
+            LoggerUtil.getLogger(LinkTokenService.class);
 
     public static Response createLinkToken() {
 

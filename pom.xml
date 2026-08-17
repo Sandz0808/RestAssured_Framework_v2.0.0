@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
@@ -5,33 +7,66 @@
 
     <modelVersion>4.0.0</modelVersion>
 
+    <!-- ========================================================= -->
+    <!-- PROJECT INFORMATION -->
+    <!-- ========================================================= -->
+
     <groupId>rest-assured-framework</groupId>
     <artifactId>rest-assured-framework</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
+
+    <!-- ========================================================= -->
+    <!-- PROPERTIES -->
+    <!-- ========================================================= -->
+
     <properties>
+
+        <!-- Java -->
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
 
+        <!-- Rest Assured -->
         <restassured.version>6.0.0</restassured.version>
+
+        <!-- Jackson -->
         <jackson.version>2.21.0</jackson.version>
+
+        <!-- Maven Surefire -->
         <surefire.version>3.5.4</surefire.version>
+
+        <!-- Allure -->
         <allure.version>2.24.0</allure.version>
+
+        <!-- Logging -->
         <slf4j.version>2.0.17</slf4j.version>
         <logback.version>1.4.11</logback.version>
+
+        <!-- TestNG -->
         <testng.version>7.10.2</testng.version>
 
+        <!-- Maven Plugins -->
+        <compiler.version>3.13.0</compiler.version>
+        <antrun.version>3.1.0</antrun.version>
+        <exec.version>3.5.0</exec.version>
+
+        <!-- Encoding -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-
     </properties>
+
+
+    <!-- ========================================================= -->
+    <!-- DEPENDENCIES -->
+    <!-- ========================================================= -->
 
     <dependencies>
 
-        <!-- ========================= -->
-        <!-- Rest Assured -->
-        <!-- ========================= -->
+        <!-- ===================================================== -->
+        <!-- REST ASSURED -->
+        <!-- ===================================================== -->
+
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>rest-assured</artifactId>
@@ -39,9 +74,11 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- ========================= -->
-        <!-- TestNG -->
-        <!-- ========================= -->
+
+        <!-- ===================================================== -->
+        <!-- TESTNG -->
+        <!-- ===================================================== -->
+
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
@@ -49,18 +86,22 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- ========================= -->
-        <!-- Jackson -->
-        <!-- ========================= -->
+
+        <!-- ===================================================== -->
+        <!-- JACKSON -->
+        <!-- ===================================================== -->
+
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>${jackson.version}</version>
         </dependency>
 
-        <!-- ========================= -->
-        <!-- Logging -->
-        <!-- ========================= -->
+
+        <!-- ===================================================== -->
+        <!-- LOGGING -->
+        <!-- ===================================================== -->
+
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -73,11 +114,11 @@
             <version>${logback.version}</version>
         </dependency>
 
-        <!-- ========================= -->
-        <!-- Allure -->
-        <!-- ========================= -->
 
-        <!-- TestNG Integration -->
+        <!-- ===================================================== -->
+        <!-- ALLURE TESTNG -->
+        <!-- ===================================================== -->
+
         <dependency>
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-testng</artifactId>
@@ -85,7 +126,11 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Rest Assured Integration -->
+
+        <!-- ===================================================== -->
+        <!-- ALLURE REST ASSURED -->
+        <!-- ===================================================== -->
+
         <dependency>
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-rest-assured</artifactId>
@@ -93,7 +138,11 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- JSON Schema Validator -->
+
+        <!-- ===================================================== -->
+        <!-- JSON SCHEMA VALIDATOR -->
+        <!-- ===================================================== -->
+
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>json-schema-validator</artifactId>
@@ -101,7 +150,11 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Faker Dependency -->
+
+        <!-- ===================================================== -->
+        <!-- JAVA FAKER -->
+        <!-- ===================================================== -->
+
         <dependency>
             <groupId>com.github.javafaker</groupId>
             <artifactId>javafaker</artifactId>
@@ -110,23 +163,39 @@
 
     </dependencies>
 
+
+    <!-- ========================================================= -->
+    <!-- BUILD -->
+    <!-- ========================================================= -->
+
     <build>
 
         <plugins>
-            <!-- Compiler Plugin to handle Java 17 release target -->
+
+
+            <!-- ================================================= -->
+            <!-- MAVEN COMPILER -->
+            <!-- ================================================= -->
+
             <plugin>
+
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.13.0</version>
+                <version>${compiler.version}</version>
+
                 <configuration>
                     <release>17</release>
                 </configuration>
+
             </plugin>
 
-            <!-- ========================= -->
-            <!-- Maven Surefire -->
-            <!-- ========================= -->
+
+            <!-- ================================================= -->
+            <!-- MAVEN SUREFIRE -->
+            <!-- ================================================= -->
+
             <plugin>
+
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${surefire.version}</version>
@@ -135,53 +204,306 @@
 
                     <useModulePath>false</useModulePath>
 
-<!--                    <includes>-->
-<!--                        <include>**/*Test.java</include>-->
-<!--                        <include>**/*Tests.java</include>-->
-<!--                    </includes>-->
-
+                    <!-- TestNG Suite -->
                     <suiteXmlFiles>
                         <suiteXmlFile>testng.xml</suiteXmlFile>
                     </suiteXmlFiles>
 
+                    <!-- TestNG Group Filtering -->
+                    <!--suppress UnresolvedMavenProperty -->
+                    <groups>${groups}</groups>
+
+                    <!-- Allure Results -->
                     <systemPropertyVariables>
+
                         <allure.results.directory>
                             ${project.build.directory}/allure-results
                         </allure.results.directory>
+
                     </systemPropertyVariables>
 
+                    <!-- Continue execution even when tests fail -->
                     <testFailureIgnore>true</testFailureIgnore>
 
                 </configuration>
 
             </plugin>
 
-            <!-- ========================= -->
-            <!-- Allure Maven -->
-            <!-- ========================= -->
-            <plugin>
-                <groupId>io.qameta.allure</groupId>
-                <artifactId>allure-maven</artifactId>
-                <version>2.12.0</version>
 
-                <configuration>
-                    <resultsDirectory>${project.build.directory}/allure-results</resultsDirectory>
-                    <reportDirectory>${project.build.directory}/allure-report</reportDirectory>
-                </configuration>
+            <!-- ================================================= -->
+            <!-- ALLURE CLI GENERATOR -->
+            <!-- ================================================= -->
+            <!--
+                IMPORTANT:
+
+                We intentionally DO NOT use allure-maven.
+
+                Allure CLI generates the report so that the
+                framework-generated executor.json is preserved.
+            -->
+
+            <plugin>
+
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>${exec.version}</version>
 
                 <executions>
+
                     <execution>
-                        <id>allure-report</id>
+
+                        <id>generate-allure-report</id>
+
                         <phase>verify</phase>
 
                         <goals>
-                            <goal>report</goal>
+                            <goal>exec</goal>
                         </goals>
 
+                        <configuration>
+
+                            <!-- Allure CLI must be available in PATH -->
+                            <executable>allure</executable>
+
+                            <arguments>
+
+                                <!-- Generate -->
+                                <argument>generate</argument>
+
+                                <!-- Input -->
+                                <argument>
+                                    ${project.build.directory}/allure-results
+                                </argument>
+
+                                <!-- Output -->
+                                <argument>-o</argument>
+
+                                <argument>
+                                    ${project.build.directory}/allure-report
+                                </argument>
+
+                                <!-- Clean generated report -->
+                                <argument>--clean</argument>
+
+                            </arguments>
+
+                        </configuration>
+
                     </execution>
+
                 </executions>
 
             </plugin>
+
+
+            <!-- ================================================= -->
+            <!-- ALLURE HISTORY + REPORT ARCHIVER -->
+            <!-- ================================================= -->
+
+            <plugin>
+
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>${antrun.version}</version>
+
+                <executions>
+
+
+                    <!-- ========================================= -->
+                    <!-- STEP 1: RESTORE PREVIOUS HISTORY -->
+                    <!-- ========================================= -->
+
+                    <execution>
+
+                        <id>restore-allure-history</id>
+
+                        <!--
+                            IMPORTANT:
+                            This runs BEFORE the test phase.
+
+                            clean removes target/, so we restore the
+                            saved history after clean but before TestNG.
+                        -->
+
+                        <phase>process-test-resources</phase>
+
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+
+                        <configuration>
+
+                            <target>
+
+                                <echo>
+                                    ==========================================
+                                    Restoring previous Allure history...
+                                    ==========================================
+                                </echo>
+
+
+                                <!-- Make sure results directory exists -->
+                                <mkdir
+                                        dir="${project.build.directory}/allure-results"/>
+
+
+                                <!-- Restore saved history -->
+                                <copy
+                                        todir="${project.build.directory}/allure-results/history"
+                                        overwrite="true"
+                                        failonerror="false">
+
+                                    <fileset
+                                            dir="${project.basedir}/allure-history/history"
+                                            erroronmissingdir="false"/>
+
+                                </copy>
+
+
+                                <echo>
+                                    Previous Allure history restored.
+                                </echo>
+
+                            </target>
+
+                        </configuration>
+
+                    </execution>
+
+
+                    <!-- ========================================= -->
+                    <!-- STEP 2: SAVE HISTORY + ARCHIVE REPORT -->
+                    <!-- ========================================= -->
+
+                    <execution>
+
+                        <id>save-history-and-archive-report</id>
+
+                        <!--
+                            This runs during verify AFTER the
+                            Allure CLI report generation.
+                        -->
+
+                        <phase>verify</phase>
+
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+
+                        <configuration>
+
+                            <target>
+
+
+                                <!-- ================================= -->
+                                <!-- Generate archive date -->
+                                <!-- ================================= -->
+
+                                <tstamp>
+
+                                    <format
+                                            property="archive.date"
+                                            pattern="yyyy-MM-dd"/>
+
+                                </tstamp>
+
+
+                                <!-- ================================= -->
+                                <!-- SAVE UPDATED HISTORY -->
+                                <!-- ================================= -->
+
+                                <echo>
+                                    ==========================================
+                                    Saving updated Allure history...
+                                    ==========================================
+                                </echo>
+
+
+                                <!-- Ensure permanent history exists -->
+                                <mkdir
+                                        dir="${project.basedir}/allure-history/history"/>
+
+
+                                <!--
+                                    Copy newly generated history from
+                                    the report back to permanent storage.
+                                -->
+
+                                <copy
+                                        todir="${project.basedir}/allure-history/history"
+                                        overwrite="true"
+                                        failonerror="false">
+
+                                    <fileset
+                                            dir="${project.build.directory}/allure-report/history"
+                                            erroronmissingdir="false"/>
+
+                                </copy>
+
+
+                                <echo>
+                                    Updated Allure history saved.
+                                </echo>
+
+
+                                <!-- ================================= -->
+                                <!-- CREATE DATED ARCHIVE -->
+                                <!-- ================================= -->
+
+                                <echo>
+                                    ==========================================
+                                    Creating dated Allure report archive...
+                                    ==========================================
+                                </echo>
+
+
+                                <!-- Create dated directory -->
+                                <!--suppress UnresolvedMavenProperty -->
+                                <mkdir
+                                        dir="${project.basedir}/reports/allure/${archive.date}"/>
+
+
+                                <!--
+                                    Copy complete generated Allure report
+                                    into the dated archive.
+                                -->
+
+                                <!--suppress UnresolvedMavenProperty -->
+                                <copy
+                                        todir="${project.basedir}/reports/allure/${archive.date}"
+                                        overwrite="true"
+                                        failonerror="true">
+
+                                    <fileset
+                                            dir="${project.build.directory}/allure-report"/>
+
+                                </copy>
+
+
+                                <echo>
+                                    ==========================================
+                                    Allure report archived successfully.
+                                    ==========================================
+                                </echo>
+
+                                <!--suppress UnresolvedMavenProperty -->
+                                <echo>
+                                    Archive:
+                                    ${project.basedir}/reports/allure/${archive.date}
+                                </echo>
+
+
+                            </target>
+
+                        </configuration>
+
+                    </execution>
+
+
+                </executions>
+
+            </plugin>
+
 
         </plugins>
 

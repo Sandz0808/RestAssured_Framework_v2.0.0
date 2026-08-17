@@ -13,7 +13,7 @@ import static io.restassured.RestAssured.given;
 public class AuthenticationService {
 
     private static final Logger log =
-            LoggerUtil.getLogger(com.cheq.application.services.contactlistservice.AuthenticationService.class);
+            LoggerUtil.getLogger(AuthenticationService.class);
 
     public static Response createProcessorToken(CreateProcessorToken payload) {
 

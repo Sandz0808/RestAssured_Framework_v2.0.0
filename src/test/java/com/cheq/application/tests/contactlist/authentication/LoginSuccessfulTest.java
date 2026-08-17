@@ -10,7 +10,7 @@ import io.qameta.allure.*;
 import io.restassured.response.Response;
 import com.cheq.application.listeners.RetryAnalyzer;
 import org.testng.annotations.Test;
-import static com.cheq.application.constants.contactlistconstant.HeaderConstant.*;
+import static com.cheq.application.constants.contactlistconstant.ContactListHeaderConstant.*;
 import static com.cheq.application.constants.statuscode.StatusCodeConstant.*;
 
 

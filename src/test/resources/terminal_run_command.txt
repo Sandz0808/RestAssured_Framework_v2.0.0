@@ -57,3 +57,32 @@ allure generate target/allure-results --output target/allure-report
 Copy-Item -Path "target/allure-report/history" `
           -Destination "target/allure-results/history" `
           -Recurse -Force
+
+==========================================================
+ALLURE HISTORY GUIDE
+==========================================================
+Step 1 — Run tests
+mvn clean test -Dapp=plaid -Dconfig=staging -Dgroups=plaid
+
+Step 2
+New-Item -ItemType Directory -Force .\target\allure-results\history
+
+Step 3
+Copy-Item .\allure-history\history\* .\target\allure-results\history\ -Recurse -Force
+
+Step 4
+allure generate .\target\allure-results --clean -o .\target\allure-report
+
+Step 5
+Copy-Item .\target\allure-report\history\* .\allure-history\history\ -Recurse -Force
+
+Step 6
+Get-Content .\allure-history\history\history-trend.json
+
+allure open .\target\allure-report
+
+
+// For the automatic report generation + archive, use:
+
+mvn clean verify -Dapp=plaid -Dconfig=staging -Dgroups=plaid
+mvn clean verify -Dconfig=staging -Dgroups=test

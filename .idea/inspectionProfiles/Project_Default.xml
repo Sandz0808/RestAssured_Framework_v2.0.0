@@ -16,6 +16,8 @@
           <option value="restassured_framework_v2.0.0" />
           <option value="restassured_framework_v2.0.0" />
           <option value="restassured_framework_v2.0.0" />
+          <option value="restassured_framework_v2.0.0" />
+          <option value="restassured_framework_v2.0.0" />
         </list>
       </option>
       <option name="ignoredPackages">
@@ -24,10 +26,14 @@
           <option value="com.fasterxml.jackson.core:jackson-core:2.21.0" />
           <option value="commons-codec:commons-codec:1.11" />
           <option value="org.mozilla:rhino:1.7.7.2" />
+          <option value="org.apache.commons:commons-lang3:3.5" />
+          <option value="org.yaml:snakeyaml:1.23" />
         </list>
       </option>
       <option name="ignoredReasons">
         <list>
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
           <option value="Not exploitable" />
           <option value="Not exploitable" />
           <option value="Not exploitable" />
@@ -38,7 +44,7 @@
     <inspection_tool class="groupsTestNG" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="groups">
         <value>
-          <list size="13">
+          <list size="15">
             <item index="0" class="java.lang.String" itemvalue="smoke" />
             <item index="1" class="java.lang.String" itemvalue="test" />
             <item index="2" class="java.lang.String" itemvalue="user" />
@@ -52,6 +58,8 @@
             <item index="10" class="java.lang.String" itemvalue="security" />
             <item index="11" class="java.lang.String" itemvalue="tls" />
             <item index="12" class="java.lang.String" itemvalue="plaid" />
+            <item index="13" class="java.lang.String" itemvalue="runall" />
+            <item index="14" class="java.lang.String" itemvalue="runAll" />
           </list>
         </value>
       </option>

@@ -1,0 +1,15 @@
+========== USER LOGIN ==========
+Endpoint : /users/login
+Method   : POST
+Status Code  : 200
+Response Time: 1279 ms
+Response saved to LoginResponse.json
+========== USER LOGOUT ==========
+ Endpoint: /users/logout
+ Method  : POST
+  Status Code : 200
+ Response Time  : 1262 ms
+Verifying Success Status Code. Expected: 200
+Status Code verification passed.
+Verifying Response Body Is Empty.
+Response body is empty verification passed.

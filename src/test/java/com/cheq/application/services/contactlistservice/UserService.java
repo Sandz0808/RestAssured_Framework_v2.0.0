@@ -7,7 +7,7 @@ import io.restassured.response.Response;
 import org.slf4j.Logger;
 import com.cheq.application.utilities.LoggerUtil;
 import com.cheq.application.utilities.SaveResponseUtil;
-import static com.cheq.application.constants.contactlistconstant.EndpointConstant.*;
+import static com.cheq.application.constants.contactlistconstant.ContactListEndpointConstant.*;
 import static io.restassured.RestAssured.given;
 
 

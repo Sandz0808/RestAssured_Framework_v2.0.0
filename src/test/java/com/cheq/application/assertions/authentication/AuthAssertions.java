@@ -23,7 +23,7 @@ public class AuthAssertions {
             String sanitizedToken =
                     (token == null || token.isBlank())
                             ? "{}"
-                            : "🙈🙃🛡️✨👻🥷";
+                            : "******";
 
             Allure.addAttachment(
                     "Authorization Token",

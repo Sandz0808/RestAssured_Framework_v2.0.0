@@ -1,0 +1,2 @@
+Expected Status Code : 301
+Actual Status Code   : 200

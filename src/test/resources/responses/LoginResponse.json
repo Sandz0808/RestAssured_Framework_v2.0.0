@@ -4,7 +4,7 @@
     "firstName" : "Test",
     "lastName" : "User",
     "email" : "sjimena@faker.com",
-    "__v" : 489
+    "__v" : 529
   },
-  "token" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTRlZjRhNDg2ODcyNDAwMTU0Y2MxOTMiLCJpYXQiOjE3ODY5NDM2NTZ9.UFnQDnnpeAtQg3DmH89e05lyOB07raJ9tFWfeyjlnFU"
+  "token" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTRlZjRhNDg2ODcyNDAwMTU0Y2MxOTMiLCJpYXQiOjE3ODY5NzA5ODR9.qsfEXTYuAQPLOv6ncO0D_b84FiFLXgV7p34H7-nBzSk"
 }

@@ -3,8 +3,8 @@ package com.cheq.application.tests.contactlist.security;
 import com.cheq.application.assertions.common.CommonAssertions;
 import com.cheq.application.hooks.Hooks;
 import com.cheq.application.listeners.RetryAnalyzer;
-import com.cheq.application.services.contactlistservice.AuthenticationService;
 import com.cheq.application.services.contactlistservice.SecurityService;
+import com.cheq.application.utilities.ConfigReader;
 import com.cheq.application.utilities.LoggerUtil;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -19,14 +19,10 @@ import javax.net.ssl.SSLException;
 public class TlsSecurityTest extends Hooks {
 
     private static final Logger log =
-            LoggerUtil.getLogger(AuthenticationService.class);
+            LoggerUtil.getLogger(TlsSecurityTest.class);
 
-    private static final String HTTPS_ENDPOINT =
-            "https://thinking-tester-contact-list.herokuapp.com";
-
-    private static final String HTTP_ENDPOINT =
-            "http://thinking-tester-contact-list.herokuapp.com";
-
+    private static final String HTTPS_ENDPOINT = "https://thinking-tester-contact-list.herokuapp.com";
+    private static final String HTTP_ENDPOINT = "http://thinking-tester-contact-list.herokuapp.com";
 
     /**
      * TC - Verify HTTP is redirected to HTTPS
@@ -45,7 +41,7 @@ public class TlsSecurityTest extends Hooks {
 
         CommonAssertions.verifyStatusCode(
                 response,
-                response.statusCode() == 200    //301
+                response.statusCode() == 301   //301
                         || response.statusCode() == 308
                         ? response.statusCode()
                         : 301

@@ -58,6 +58,19 @@ jobs:
             target/allure-results \
             target/test-summary.json
 
+      # ==========================================================
+      # TRIGGER POWER AUTOMATE
+      # ==========================================================
+
+      - name: Trigger Power Automate
+        if: always()
+        run: |
+          curl --fail-with-body \
+            -X POST \
+            -H "Content-Type: application/json" \
+            --data-binary @target/test-summary.json \
+            "${{ secrets.POWER_AUTOMATE_URL }}"
+
       - name: Upload test summary
         if: always()
         uses: actions/upload-artifact@v6

@@ -14,16 +14,8 @@ jobs:
 
     steps:
 
-      # ==========================================================
-      # CHECKOUT
-      # ==========================================================
-
       - name: Checkout repository
         uses: actions/checkout@v5
-
-      # ==========================================================
-      # JAVA
-      # ==========================================================
 
       - name: Set up JDK 17
         uses: actions/setup-java@v5
@@ -32,37 +24,18 @@ jobs:
           java-version: 17
           cache: maven
 
-      # ==========================================================
-      # INSTALL ALLURE CLI
-      # ==========================================================
-
       - name: Install Allure CLI
         run: |
-          curl -L \
-            https://github.com/allure-framework/allure2/releases/download/2.29.0/allure-2.29.0.zip \
-            -o allure.zip
-
-          unzip -q allure.zip
-
-          mkdir -p "$HOME/.local"
-
-          mv allure-2.29.0 "$HOME/.local/allure"
-
-          echo "$HOME/.local/allure/bin" >> "$GITHUB_PATH"
-
-          allure --version
-
-      # ==========================================================
-      # RUN MAVEN TESTS
-      # ==========================================================
+          sudo apt-get update
+          sudo apt-get install -y wget unzip
+          wget https://github.com/allure-framework/allure2/releases/download/2.29.0/allure-2.29.0.zip
+          unzip allure-2.29.0.zip
+          sudo mv allure-2.29.0 /opt/allure
+          sudo ln -s /opt/allure/bin/allure /usr/bin/allure
 
       - name: Run Maven tests
         run: |
           mvn -B clean test
-
-      # ==========================================================
-      # GENERATE ALLURE REPORT
-      # ==========================================================
 
       - name: Generate Allure report
         if: always()
@@ -78,20 +51,12 @@ jobs:
             echo "No Allure results generated." > target/allure-report/README.txt
           fi
 
-      # ==========================================================
-      # GENERATE TEST SUMMARY
-      # ==========================================================
-
       - name: Generate test summary
         if: always()
         run: |
           python scripts/generate_test_summary.py \
             target/allure-results \
             target/test-summary.json
-
-      # ==========================================================
-      # UPLOAD TEST SUMMARY
-      # ==========================================================
 
       - name: Upload test summary
         if: always()
@@ -100,29 +65,6 @@ jobs:
           name: test-summary-run-${{ github.run_number }}
           path: target/test-summary.json
           retention-days: 7
-
-      # ==========================================================
-      # SEND EVENT TO POWER AUTOMATE
-      # ==========================================================
-
-      - name: Trigger Power Automate
-        if: always()
-        env:
-          POWER_AUTOMATE_WEBHOOK_URL: ${{ secrets.POWER_AUTOMATE_WEBHOOK_URL }}
-        run: |
-          curl -X POST "$POWER_AUTOMATE_WEBHOOK_URL" \
-            -H "Content-Type: application/json" \
-            -d '{
-              "event": "test_run_completed",
-              "run_number": "${{ github.run_number }}",
-              "run_attempt": "${{ github.run_attempt }}",
-              "repository": "${{ github.repository }}",
-              "branch": "${{ github.ref_name }}"
-            }'
-
-      # ==========================================================
-      # UPLOAD ALLURE REPORT
-      # ==========================================================
 
       - name: Upload Allure report artifact
         if: always()
@@ -133,7 +75,7 @@ jobs:
           retention-days: 7
 
       # ==========================================================
-      # GITHUB PAGES
+      # GITHUB PAGES - PUBLISH TEST SUMMARY JSON
       # ==========================================================
 
       - name: Prepare GitHub Pages content

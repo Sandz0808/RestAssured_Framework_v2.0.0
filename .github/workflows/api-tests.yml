@@ -73,3 +73,46 @@ jobs:
           name: allure-report-run-${{ github.run_number }}-attempt-${{ github.run_attempt }}
           path: target/allure-report
           retention-days: 7
+
+      # ==========================================================
+      # GITHUB PAGES - PUBLISH TEST SUMMARY JSON
+      # ==========================================================
+
+      - name: Prepare GitHub Pages content
+        if: always()
+        run: |
+          mkdir -p pages
+
+          if [ -f target/test-summary.json ]; then
+            cp target/test-summary.json pages/test-summary.json
+          else
+            echo '{"error":"test-summary.json not found"}' > pages/test-summary.json
+          fi
+
+      - name: Upload GitHub Pages artifact
+        if: always()
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: pages
+
+  # ==========================================================
+  # DEPLOY TEST SUMMARY TO GITHUB PAGES
+  # ==========================================================
+
+  deploy-pages:
+    runs-on: ubuntu-latest
+    needs: run-tests
+
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+
+      - name: Deploy test summary to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

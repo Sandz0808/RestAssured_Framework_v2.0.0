@@ -51,20 +51,12 @@ jobs:
             echo "No Allure results generated." > target/allure-report/README.txt
           fi
 
-      # ==========================================================
-      # GENERATE TEST SUMMARY FOR POWER APPS / POWER AUTOMATE
-      # ==========================================================
-
       - name: Generate test summary
         if: always()
         run: |
           python scripts/generate_test_summary.py \
             target/allure-results \
             target/test-summary.json
-
-      # ==========================================================
-      # UPLOAD TEST SUMMARY
-      # ==========================================================
 
       - name: Upload test summary
         if: always()
@@ -73,10 +65,6 @@ jobs:
           name: test-summary-run-${{ github.run_number }}
           path: target/test-summary.json
           retention-days: 7
-
-      # ==========================================================
-      # UPLOAD ALLURE REPORT
-      # ==========================================================
 
       - name: Upload Allure report artifact
         if: always()

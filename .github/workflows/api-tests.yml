@@ -1,4 +1,4 @@
-name: API Automation Tests
+name: API Automation + Allure Report
 
 on:
   push:
@@ -8,28 +8,53 @@ on:
   workflow_dispatch:
 
 jobs:
-  test:
-
+  run-tests:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
 
-      - name: Checkout source code
-        uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v5
 
-      - name: Set up Java
-        uses: actions/setup-java@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: 17
           cache: maven
 
-      - name: Run API Tests
-        run: mvn clean verify  -Dgroups=test
+      - name: Install Allure CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget unzip
+          wget https://github.com/allure-framework/allure2/releases/download/2.29.0/allure-2.29.0.zip
+          unzip allure-2.29.0.zip
+          sudo mv allure-2.29.0 /opt/allure
+          sudo ln -s /opt/allure/bin/allure /usr/bin/allure
 
-      - name: Upload Allure Report
-        uses: actions/upload-artifact@v4
+      - name: Run Maven tests
+        run: |
+          mvn -B clean test
+
+      - name: Generate Allure report
         if: always()
+        run: |
+          if [ -d target/allure-results ]; then
+            allure generate target/allure-results \
+              --clean \
+              --single-file \
+              -o target/allure-report
+          else
+            echo "No Allure results found."
+            mkdir -p target/allure-report
+            echo "No Allure results generated." > target/allure-report/README.txt
+          fi
+
+      - name: Upload Allure report artifact
+        if: always()
+        uses: actions/upload-artifact@v6
         with:
-          name: allure-report
+          name: allure-report-run-${{ github.run_number }}-attempt-${{ github.run_attempt }}
           path: target/allure-report
+          retention-days: 7

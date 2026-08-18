@@ -1,0 +1,10 @@
+========== TLS 1.2 SECURITY TEST ==========
+Endpoint: https://thinking-tester-contact-list.herokuapp.com
+Protocol : TLSv1.2
+Method  : GET
+Status Code: 200
+Response Time:1379 ms
+Verifying Success Status Code. Expected: 200
+Status Code verification passed.
+Verifying Response Time. Threshold: 2000 ms
+Response Time verification passed.

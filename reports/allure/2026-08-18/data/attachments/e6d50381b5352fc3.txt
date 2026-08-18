@@ -1,0 +1,30 @@
+========== CREATE USER ==========
+Endpoint : /users
+Method   : POST
+User  : Sandrex Jimenez
+Status Code   : 201
+Response Time : 1374 ms
+ Response saved to SignupResponse.json
+========== ADD CONTACT ==========
+Endpoint : /contacts
+Method   : POST
+Contact  : John Doe
+Status Code   : 201
+Response Time : 1158 ms
+Response saved to addContactResponse.json
+==========  UPDATE CONTACT ========== 
+ Endpoint: /contacts/{id} 
+Method  : PUT 
+Contact : UPDATED-John UPDATED-Doe
+ Status Code  : 200
+ Response Time: 1150 ms
+Verifying Success Status Code. Expected: 200
+Status Code verification passed.
+Verifying Header: Content-Type
+Header 'Content-Type' verification passed.
+Verifying Response Time. Threshold: 2000 ms
+Response Time verification passed.
+Verifying Response Body contains text: UPDATED
+Response Body text verification passed.
+Verifying Response Body.
+Response Body verification passed.

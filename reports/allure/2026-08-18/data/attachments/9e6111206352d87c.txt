@@ -1,0 +1,23 @@
+========== CREATE USER ==========
+Endpoint : /users
+Method   : POST
+User  : Sandrex Jimenez
+Status Code   : 201
+Response Time : 1160 ms
+ Response saved to SignupResponse.json
+========== UPDATE USER ==========
+ Endpoint : /users/me
+Method   : PATCH
+User     : Updated_b276 Updated_b276
+ Status Code   : 200
+ Response Time : 1527 ms
+Verifying Success Status Code. Expected: 200
+Status Code verification passed.
+Verifying Header: Content-Type
+Header 'Content-Type' verification passed.
+Verifying Response Time. Threshold: 2000 ms
+Response Time verification passed.
+Verifying Response Body contains text: Updated_
+Response Body text verification passed.
+Verifying Response Body.
+Response Body verification passed.

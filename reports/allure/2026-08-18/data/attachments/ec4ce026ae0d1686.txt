@@ -1,0 +1,7 @@
+========== HTTP ENFORCEMENT ==========
+Endpoint : http://thinking-tester-contact-list.herokuapp.com
+Method   : GET
+Status Code  : 200
+Response Time: 934 ms
+Verifying Success Status Code. Expected: 301
+Status Code verification failed.

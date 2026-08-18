@@ -1,0 +1,18 @@
+========== CREATE USER ==========
+Endpoint : /users
+Method   : POST
+User  : Sandrex Jimenez
+Status Code   : 201
+Response Time : 1142 ms
+ Response saved to SignupResponse.json
+========== ADD CONTACT ==========
+Endpoint : /contacts
+Method   : POST
+Contact  : John 
+Status Code   : 400
+Response Time : 1235 ms
+=========== Validate_Bad_Request_error_for_Empty_LastName ===========
+Verifying Success Status Code. Expected: 400
+Status Code verification passed.
+Verifying Response Time. Threshold: 2000 ms
+Response Time verification passed.

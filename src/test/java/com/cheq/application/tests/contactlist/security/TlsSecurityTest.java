@@ -3,7 +3,7 @@ package com.cheq.application.tests.contactlist.security;
 import com.cheq.application.assertions.common.CommonAssertions;
 import com.cheq.application.hooks.Hooks;
 import com.cheq.application.listeners.RetryAnalyzer;
-import com.cheq.application.services.contactlistservice.SecurityService;
+import com.cheq.application.services.contactlistservice.TlsSecurityService;
 import com.cheq.application.utilities.ConfigReader;
 import com.cheq.application.utilities.LoggerUtil;
 import io.qameta.allure.Epic;
@@ -21,8 +21,8 @@ public class TlsSecurityTest extends Hooks {
     private static final Logger log =
             LoggerUtil.getLogger(TlsSecurityTest.class);
 
-    private static final String HTTPS_ENDPOINT = "https://thinking-tester-contact-list.herokuapp.com";
-    private static final String HTTP_ENDPOINT = "http://thinking-tester-contact-list.herokuapp.com";
+    private static final String HTTPS_ENDPOINT = ConfigReader.get("base.url.contactlist");
+    private static final String HTTP_ENDPOINT = HTTPS_ENDPOINT.replace("https://", "http://");
 
     /**
      * TC - Verify HTTP is redirected to HTTPS
@@ -35,13 +35,21 @@ public class TlsSecurityTest extends Hooks {
     public void testHttpEnforcement() {
 
         Response response =
-                SecurityService.getHttpWithoutRedirect(
+                TlsSecurityService.getHttpWithoutRedirect(
                         HTTP_ENDPOINT
                 );
 
+        if (response.statusCode() == 200) {
+
+            Assert.fail(
+                    "API does not support redirect. "
+                            + "HTTP request returned 200 instead of redirecting to HTTPS."
+            );
+        }
+
         CommonAssertions.verifyStatusCode(
                 response,
-                response.statusCode() == 301   //301
+                response.statusCode() == 301
                         || response.statusCode() == 308
                         ? response.statusCode()
                         : 301
@@ -68,7 +76,7 @@ public class TlsSecurityTest extends Hooks {
 
         try {
 
-            SecurityService.getWithTls10(
+            TlsSecurityService.getWithTls10(
                     HTTPS_ENDPOINT
             );
 
@@ -98,7 +106,7 @@ public class TlsSecurityTest extends Hooks {
     public void testTls12IsAccepted() {
 
         Response response =
-                SecurityService.getWithTls12(
+                TlsSecurityService.getWithTls12(
                         HTTPS_ENDPOINT
                 );
 

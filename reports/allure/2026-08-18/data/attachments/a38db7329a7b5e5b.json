@@ -1,0 +1,10 @@
+{
+    "user": {
+        "_id": "*** Sensitive data is Masked for security! ***",
+        "firstName": "Test",
+        "lastName": "User",
+        "email": "sjimena@faker.com",
+        "__v": 534
+    },
+    "token": "*** Sensitive data is Masked for security! ***"
+}

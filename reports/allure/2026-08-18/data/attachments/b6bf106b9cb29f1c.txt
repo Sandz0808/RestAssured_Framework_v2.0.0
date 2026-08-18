@@ -1,0 +1,15 @@
+========== CREATE USER ==========
+Endpoint : /users
+Method   : POST
+User  : Sandrex Jimenez
+Status Code   : 201
+Response Time : 1776 ms
+ Response saved to SignupResponse.json
+ ========== READ USER ==========
+ Endpoint  : /users/me
+ Method   : GET
+Status Code  : 401
+Response Time: 1174 ms
+Verifying Success Status Code. Expected: 401
+Status Code verification passed.
+Verifying Authorization Token.

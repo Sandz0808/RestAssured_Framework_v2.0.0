@@ -1,0 +1,24 @@
+========== CREATE USER ==========
+Endpoint : /users
+Method   : POST
+User  : Sandrex Jimenez
+Status Code   : 201
+Response Time : 1433 ms
+ Response saved to SignupResponse.json
+ ========== READ USER ==========
+ Endpoint  : /users/me
+ Method   : GET
+Status Code  : 200
+Response Time: 1157 ms
+Verifying Success Status Code. Expected: 200
+Status Code verification passed.
+Verifying Header: Content-Type
+Header 'Content-Type' verification passed.
+Verifying Response Time. Threshold: 2000 ms
+Response Time verification passed.
+Verifying Response Body contains text: Sandrex
+Response Body text verification passed.
+Verifying Response Body.
+Response Body verification passed.
+Verifying Response Headers.
+Response Headers verification passed.

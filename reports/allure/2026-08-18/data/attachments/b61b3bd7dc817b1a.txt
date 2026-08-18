@@ -1,0 +1,18 @@
+========== USER LOGIN ==========
+Endpoint : /users/login
+Method   : POST
+Status Code  : 200
+Response Time: 1138 ms
+Response saved to LoginResponse.json
+Verifying Success Status Code. Expected: 200
+Status Code verification passed.
+Verifying Header: Content-Type
+Header 'Content-Type' verification passed.
+Verifying Response Time. Threshold: 2000 ms
+Response Time verification passed.
+Verifying Response Body contains text: sjimena
+Response Body text verification passed.
+Verifying Response Body.
+Response Body verification passed.
+Verifying Authentication Token Exists.
+Authentication Token verification passed.

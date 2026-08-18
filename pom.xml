@@ -50,6 +50,9 @@
         <antrun.version>3.1.0</antrun.version>
         <exec.version>3.5.0</exec.version>
 
+        <!-- Allure Archive Retention -->
+        <allure.archive.retention.days>7</allure.archive.retention.days>
+
         <!-- Encoding -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -297,7 +300,7 @@
 
 
             <!-- ================================================= -->
-            <!-- ALLURE HISTORY + REPORT ARCHIVER -->
+            <!-- ALLURE HISTORY + REPORT ARCHIVER + RETENTION -->
             <!-- ================================================= -->
 
             <plugin>
@@ -318,11 +321,10 @@
                         <id>restore-allure-history</id>
 
                         <!--
-                            IMPORTANT:
-                            This runs BEFORE the test phase.
+                            clean removes target/.
 
-                            clean removes target/, so we restore the
-                            saved history after clean but before TestNG.
+                            Therefore restore the permanent
+                            Allure history before tests execute.
                         -->
 
                         <phase>process-test-resources</phase>
@@ -372,7 +374,7 @@
 
 
                     <!-- ========================================= -->
-                    <!-- STEP 2: SAVE HISTORY + ARCHIVE REPORT -->
+                    <!-- STEP 2: SAVE HISTORY + ARCHIVE + CLEANUP -->
                     <!-- ========================================= -->
 
                     <execution>
@@ -380,8 +382,19 @@
                         <id>save-history-and-archive-report</id>
 
                         <!--
-                            This runs during verify AFTER the
-                            Allure CLI report generation.
+                            Runs during verify.
+
+                            By this point:
+
+                            1. Tests are finished.
+                            2. Allure CLI generated the report.
+                            3. target/allure-report exists.
+
+                            Then we:
+
+                            4. Save updated history.
+                            5. Archive today's report.
+                            6. Remove expired archives.
                         -->
 
                         <phase>verify</phase>
@@ -396,7 +409,7 @@
 
 
                                 <!-- ================================= -->
-                                <!-- Generate archive date -->
+                                <!-- GENERATE ARCHIVE DATE -->
                                 <!-- ================================= -->
 
                                 <tstamp>
@@ -426,7 +439,8 @@
 
                                 <!--
                                     Copy newly generated history from
-                                    the report back to permanent storage.
+                                    the current Allure report into
+                                    permanent storage.
                                 -->
 
                                 <copy
@@ -447,7 +461,7 @@
 
 
                                 <!-- ================================= -->
-                                <!-- CREATE DATED ARCHIVE -->
+                                <!-- CREATE DATED REPORT ARCHIVE -->
                                 <!-- ================================= -->
 
                                 <echo>
@@ -457,15 +471,15 @@
                                 </echo>
 
 
-                                <!-- Create dated directory -->
+                                <!-- Create today's archive directory -->
                                 <!--suppress UnresolvedMavenProperty -->
                                 <mkdir
                                         dir="${project.basedir}/reports/allure/${archive.date}"/>
 
 
                                 <!--
-                                    Copy complete generated Allure report
-                                    into the dated archive.
+                                    Copy the complete generated
+                                    Allure report into today's archive.
                                 -->
 
                                 <!--suppress UnresolvedMavenProperty -->
@@ -486,10 +500,71 @@
                                     ==========================================
                                 </echo>
 
+
                                 <!--suppress UnresolvedMavenProperty -->
                                 <echo>
                                     Archive:
                                     ${project.basedir}/reports/allure/${archive.date}
+                                </echo>
+
+
+                                <!-- ================================= -->
+                                <!-- CLEANUP EXPIRED ARCHIVES -->
+                                <!-- ================================= -->
+
+                                <echo>
+                                    ==========================================
+                                    Cleaning expired Allure archives...
+                                    ==========================================
+                                </echo>
+
+
+                                <!--
+                                    Call the framework's Java cleanup
+                                    utility after the current report
+                                    has already been archived.
+
+                                    Retention is controlled by:
+
+                                    ${allure.archive.retention.days}
+                                -->
+
+                                <java
+                                        classname="com.cheq.application.utilities.AllureReportArchiveManager"
+                                        fork="true"
+                                        failonerror="true">
+
+                                    <classpath>
+
+                                        <!--
+                                            The cleanup manager is compiled
+                                            into target/classes.
+                                        -->
+
+                                        <pathelement
+                                                location="${project.build.outputDirectory}"/>
+
+                                        <pathelement
+                                                location="${project.build.testOutputDirectory}"/>
+
+                                    </classpath>
+
+
+                                    <!--
+                                        Pass configured retention days
+                                        to AllureReportArchiveManager.
+                                    -->
+
+                                    <arg
+                                            value="${allure.archive.retention.days}"/>
+
+                                </java>
+
+
+                                <echo>
+                                    ==========================================
+                                    Allure archive cleanup completed.
+                                    ==========================================
                                 </echo>
 
 

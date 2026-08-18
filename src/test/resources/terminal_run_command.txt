@@ -86,3 +86,6 @@ allure open .\target\allure-report
 
 mvn clean verify -Dapp=plaid -Dconfig=staging -Dgroups=plaid
 mvn clean verify -Dconfig=staging -Dgroups=test
+
+//
+https://sandz0808.github.io/RestAssured_Framework_v2.0.0/test-summary.json

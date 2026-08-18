@@ -95,6 +95,26 @@ jobs:
         with:
           path: pages
 
+      # ==========================================================
+      # POWER AUTOMATE - SEND TEST RESULT
+      # ==========================================================
+
+      - name: Trigger Power Automate
+        if: always()
+        env:
+          POWER_AUTOMATE_URL: ${{ secrets.POWER_AUTOMATE_URL }}
+        run: |
+          curl -X POST "$POWER_AUTOMATE_URL" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "repository": "${{ github.repository }}",
+              "run_number": "${{ github.run_number }}",
+              "run_attempt": "${{ github.run_attempt }}",
+              "branch": "${{ github.ref_name }}",
+              "commit": "${{ github.sha }}",
+              "status": "${{ job.status }}"
+            }'
+
   # ==========================================================
   # DEPLOY TEST SUMMARY TO GITHUB PAGES
   # ==========================================================

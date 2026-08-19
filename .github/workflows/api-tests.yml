@@ -8,35 +8,38 @@ on:
   workflow_dispatch:
 
 jobs:
-  run-tests:
+
+  # ==========================================================
+  # 1. GETTING INFORMATION
+  # ==========================================================
+
+  getting-information:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
 
     steps:
-
-      # ==========================================================
-      # 1. GETTING INFORMATION
-      # ==========================================================
-
-      - name: 🔵 Getting information
+      - name: Getting information
         run: |
           echo "=========================================="
-          echo "Getting information..."
+          echo "Getting pipeline information..."
           echo "Repository : ${{ github.repository }}"
           echo "Branch     : ${{ github.ref_name }}"
           echo "Run Number : ${{ github.run_number }}"
+          echo "Commit     : ${{ github.sha }}"
           echo "=========================================="
+
+
+  # ==========================================================
+  # 2. PREPARING ENVIRONMENT
+  # ==========================================================
+
+  preparing-environment:
+    runs-on: ubuntu-latest
+    needs: getting-information
+
+    steps:
 
       - name: Checkout repository
         uses: actions/checkout@v5
-
-      # ==========================================================
-      # 2. PREPARING TEST ENVIRONMENT
-      # ==========================================================
-
-      - name: 🟡 Preparing test environment
-        run: |
-          echo "Preparing Java and Maven test environment..."
 
       - name: Set up JDK 17
         uses: actions/setup-java@v5
@@ -45,56 +48,85 @@ jobs:
           java-version: 17
           cache: maven
 
-      # ==========================================================
-      # 3. PREPARING ALLURE
-      # ==========================================================
-
-      - name: 🟡 Preparing Allure reporting
-        run: |
-          echo "Installing Allure CLI..."
-
-      - name: Install Allure CLI
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y wget unzip
-          wget https://github.com/allure-framework/allure2/releases/download/2.29.0/allure-2.29.0.zip
-          unzip allure-2.29.0.zip
-          sudo mv allure-2.29.0 /opt/allure
-          sudo ln -s /opt/allure/bin/allure /usr/bin/allure
-
-      # ==========================================================
-      # 4. RUNNING TESTS
-      # ==========================================================
-
-      - name: 🟢 Running API automation tests
+      - name: Environment ready
         run: |
           echo "=========================================="
-          echo "Starting API automation tests..."
+          echo "Environment preparation completed."
+          echo "Java version:"
+          java -version
           echo "=========================================="
+
+
+  # ==========================================================
+  # 3. RUNNING TESTS
+  # ==========================================================
+
+  run-tests:
+    runs-on: ubuntu-latest
+    needs: preparing-environment
+    timeout-minutes: 30
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: maven
 
       - name: Run Maven tests
         run: |
           mvn -B clean test
 
-      - name: Test execution completed
+      # Preserve test results even when tests fail
+      - name: Upload Allure results
         if: always()
-        run: |
-          echo "=========================================="
-          echo "Test execution step completed."
-          echo "Job status: ${{ job.status }}"
-          echo "=========================================="
+        uses: actions/upload-artifact@v6
+        with:
+          name: allure-results-run-${{ github.run_number }}
+          path: target/allure-results
+          if-no-files-found: ignore
+          retention-days: 7
 
-      # ==========================================================
-      # 5. GENERATING ALLURE REPORT
-      # ==========================================================
 
-      - name: 🔵 Generating Allure report
-        if: always()
+  # ==========================================================
+  # 4. GENERATE ALLURE REPORT
+  # ==========================================================
+
+  generate-allure:
+    runs-on: ubuntu-latest
+    needs: run-tests
+    if: always()
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Download Allure results
+        uses: actions/download-artifact@v6
+        with:
+          name: allure-results-run-${{ github.run_number }}
+          path: target/allure-results
+
+      - name: Install Allure CLI
         run: |
-          echo "Generating Allure report..."
+          sudo apt-get update
+          sudo apt-get install -y wget unzip
+
+          wget https://github.com/allure-framework/allure2/releases/download/2.29.0/allure-2.29.0.zip
+
+          unzip allure-2.29.0.zip
+
+          sudo mv allure-2.29.0 /opt/allure
+
+          sudo ln -s /opt/allure/bin/allure /usr/bin/allure
 
       - name: Generate Allure report
-        if: always()
         run: |
           if [ -d target/allure-results ]; then
             allure generate target/allure-results \
@@ -103,98 +135,90 @@ jobs:
               -o target/allure-report
           else
             echo "No Allure results found."
+
             mkdir -p target/allure-report
-            echo "No Allure results generated." > target/allure-report/README.txt
+
+            echo "No Allure results generated." \
+              > target/allure-report/README.txt
           fi
 
-      # ==========================================================
-      # 6. GENERATING TEST SUMMARY
-      # ==========================================================
-
-      - name: 🔵 Generating test summary
-        if: always()
-        run: |
-          echo "Generating test summary JSON..."
-
-      - name: Generate test summary
-        if: always()
-        run: |
-          python scripts/generate_test_summary.py \
-            target/allure-results \
-            target/test-summary.json
-
-      # ==========================================================
-      # 7. SAVING TEST RESULTS
-      # ==========================================================
-
-      - name: 🔵 Saving test results
-        if: always()
-        run: |
-          echo "Uploading test summary and Allure artifacts..."
-
-      - name: Upload test summary
-        if: always()
-        uses: actions/upload-artifact@v6
-        with:
-          name: test-summary-run-${{ github.run_number }}
-          path: target/test-summary.json
-          retention-days: 7
-
       - name: Upload Allure report artifact
-        if: always()
         uses: actions/upload-artifact@v6
         with:
           name: allure-report-run-${{ github.run_number }}-attempt-${{ github.run_attempt }}
           path: target/allure-report
           retention-days: 7
 
-      # ==========================================================
-      # 8. PREPARING GITHUB PAGES
-      # ==========================================================
 
-      - name: 🔵 Preparing GitHub Pages
-        if: always()
+  # ==========================================================
+  # 5. GENERATE TEST SUMMARY
+  # ==========================================================
+
+  generate-summary:
+    runs-on: ubuntu-latest
+    needs: generate-allure
+    if: always()
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Download Allure results
+        uses: actions/download-artifact@v6
+        with:
+          name: allure-results-run-${{ github.run_number }}
+          path: target/allure-results
+
+      - name: Generate test summary
         run: |
-          echo "Preparing GitHub Pages content..."
+          python scripts/generate_test_summary.py \
+            target/allure-results \
+            target/test-summary.json
 
-      # ==========================================================
-      # GITHUB PAGES - PUBLISH TEST SUMMARY JSON
-      # ==========================================================
+      - name: Upload test summary
+        uses: actions/upload-artifact@v6
+        with:
+          name: test-summary-run-${{ github.run_number }}
+          path: target/test-summary.json
+          retention-days: 7
+
+      # ========================================================
+      # GITHUB PAGES - PREPARE TEST SUMMARY
+      # ========================================================
 
       - name: Prepare GitHub Pages content
-        if: always()
         run: |
           mkdir -p pages
 
           if [ -f target/test-summary.json ]; then
             cp target/test-summary.json pages/test-summary.json
           else
-            echo '{"error":"test-summary.json not found"}' > pages/test-summary.json
+            echo '{"error":"test-summary.json not found"}' \
+              > pages/test-summary.json
           fi
 
       - name: Upload GitHub Pages artifact
-        if: always()
         uses: actions/upload-pages-artifact@v4
         with:
           path: pages
 
-      # ==========================================================
-      # 9. SENDING RESULTS TO POWER AUTOMATE
-      # ==========================================================
 
-      - name: 🟣 Sending test results to Power Automate
-        if: always()
-        run: |
-          echo "Sending test execution results to Power Automate..."
+  # ==========================================================
+  # 6. SEND RESULTS TO POWER AUTOMATE
+  # ==========================================================
 
-      # ==========================================================
-      # POWER AUTOMATE - SEND TEST RESULT
-      # ==========================================================
+  send-results:
+    runs-on: ubuntu-latest
+    needs: generate-summary
+    if: always()
+
+    steps:
 
       - name: Trigger Power Automate
-        if: always()
         env:
           POWER_AUTOMATE_URL: ${{ secrets.POWER_AUTOMATE_URL }}
+
         run: |
           curl -X POST "$POWER_AUTOMATE_URL" \
             -H "Content-Type: application/json" \
@@ -204,29 +228,22 @@ jobs:
               "run_attempt": "${{ github.run_attempt }}",
               "branch": "${{ github.ref_name }}",
               "commit": "${{ github.sha }}",
-              "status": "${{ job.status }}"
+              "status": "${{ needs.run-tests.result }}"
             }'
-
-      # ==========================================================
-      # 10. RUN-TESTS JOB COMPLETED
-      # ==========================================================
-
-      - name: 🏁 Run-tests job completed
-        if: always()
-        run: |
-          echo "=========================================="
-          echo "RUN-TESTS JOB COMPLETED"
-          echo "Final job status: ${{ job.status }}"
-          echo "=========================================="
 
 
   # ==========================================================
-  # DEPLOY TEST SUMMARY TO GITHUB PAGES
+  # 7. DEPLOY TEST SUMMARY TO GITHUB PAGES
   # ==========================================================
 
   deploy-pages:
     runs-on: ubuntu-latest
-    needs: run-tests
+
+    needs:
+      - generate-summary
+      - send-results
+
+    if: always()
 
     permissions:
       pages: write
@@ -237,10 +254,6 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-
-      - name: 🚀 Deploying test results to GitHub Pages
-        run: |
-          echo "Deploying test summary to GitHub Pages..."
 
       - name: Deploy test summary to GitHub Pages
         id: deployment

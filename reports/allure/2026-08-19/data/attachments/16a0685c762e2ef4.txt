@@ -1,0 +1,1 @@
+java.lang.AssertionError: API does not support redirect. HTTP request returned 200 instead of redirecting to HTTPS.

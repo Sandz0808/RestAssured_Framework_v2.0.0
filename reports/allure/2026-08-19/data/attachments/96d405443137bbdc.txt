@@ -1,0 +1,5 @@
+========== TLS 1.0 SECURITY TEST ==========
+Endpoint  : https://thinking-tester-contact-list.herokuapp.com
+Protocol : TLSv1
+Method : GET
+TLS 1.0 connection rejected as expected: No appropriate protocol (protocol is disabled or cipher suites are inappropriate)

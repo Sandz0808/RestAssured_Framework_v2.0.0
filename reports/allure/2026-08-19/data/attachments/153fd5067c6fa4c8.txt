@@ -1,0 +1,10 @@
+========== USER LOGIN ==========
+Endpoint : /users/login
+Method   : POST
+Status Code  : 401
+Response Time: 3926 ms
+=========== Validate_Bad_Request_error_for_Empty_FirstName ===========
+Verifying Success Status Code. Expected: 401
+Status Code verification passed.
+Verifying Response Time. Threshold: 2000 ms
+Response Time verification failed.

@@ -1,10 +1,10 @@
 {
   "user" : {
-    "_id" : "6a840a1f3d98fa00155c30cb",
+    "_id" : "6a85276837f3b80015a24d5f",
     "firstName" : "Sandrex",
     "lastName" : "Jimenez",
-    "email" : "chance.becker@yahoo.com",
+    "email" : "marshall.olson@yahoo.com",
     "__v" : 1
   },
-  "token" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTg0MGExZjNkOThmYTAwMTU1YzMwY2IiLCJpYXQiOjE3ODcwMzgyMzl9.9PtxCXVXk8b6l2lrDaELHaQt_I-SpdXiJipNdj7y8hU"
+  "token" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTg1Mjc2ODM3ZjNiODAwMTVhMjRkNWYiLCJpYXQiOjE3ODcxMTEyNzJ9.wm9ZUmjS2Gy3CGXmniHv4nt1p-EldPd_-_aMSm-4eUE"
 }

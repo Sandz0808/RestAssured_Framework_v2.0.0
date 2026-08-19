@@ -1,0 +1,18 @@
+PLAID STATUS: 200
+PLAID RESPONSE: {
+    "expiration": "2026-08-19T07:09:55Z",
+    "link_token": "link-sandbox-badfa842-a5c9-4b6e-b993-2cb99717e350",
+    "request_id": "e3a4c9621c301a8"
+}
+Verifying Success Status Code. Expected: 200
+Status Code verification passed.
+Verifying Header: Content-Type
+Header 'Content-Type' verification passed.
+Verifying field 'link_token' exists.
+Field 'link_token' existence verification passed.
+Verifying field 'expiration' exists.
+Field 'expiration' existence verification passed.
+Verifying field 'request_id' exists.
+Field 'request_id' existence verification passed.
+Verifying Response Body.
+Response Body verification passed.

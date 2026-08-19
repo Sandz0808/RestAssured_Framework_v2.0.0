@@ -18,7 +18,7 @@ public class InvalidTokenTest extends Hooks {
 
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
-            groups = {"smoke", "auth", "debug"},
+            groups = {"smoke", "auth", "test"},
             description = "Verify that API rejects an invalid or expired authentication token"
     )
     public void invalidTokenTest() {

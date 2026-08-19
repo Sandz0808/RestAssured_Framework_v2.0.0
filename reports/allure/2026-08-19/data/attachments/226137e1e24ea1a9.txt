@@ -1,0 +1,11 @@
+========== CREATE USER ==========
+Endpoint : /users
+Method   : POST
+User  : Sander Jimenez
+Status Code   : 400
+Response Time : 1131 ms
+=========== Validate_Bad_Request_error_for_Short_Password ===========
+Verifying Success Status Code. Expected: 400
+Status Code verification passed.
+Verifying Response Time. Threshold: 2000 ms
+Response Time verification passed.

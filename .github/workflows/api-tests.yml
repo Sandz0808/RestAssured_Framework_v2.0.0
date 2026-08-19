@@ -80,7 +80,7 @@ jobs:
 
       - name: Run Maven tests
         run: |
-          mvn -B clean plaid
+          mvn -B clean -Dgroups=plaid
 
       # Preserve test results even when tests fail
       - name: Upload Allure results

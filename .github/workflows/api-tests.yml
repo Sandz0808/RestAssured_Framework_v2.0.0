@@ -114,7 +114,7 @@ jobs:
           echo "=========================================="
 
           mvn -B clean test \
-            -Denvironment="$TEST_ENVIRONMENT"
+            -Denv="$TEST_ENVIRONMENT"
 
       # Preserve test results even when tests fail
       - name: Upload Allure results

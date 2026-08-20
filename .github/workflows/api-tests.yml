@@ -51,6 +51,7 @@ jobs:
           echo "Branch      : ${{ github.ref_name }}"
           echo "Run Number  : ${{ github.run_number }}"
           echo "Commit      : ${{ github.sha }}"
+          echo "Event       : ${{ github.event_name }}"
           echo "Environment : $TEST_ENVIRONMENT"
           echo "=========================================="
 
@@ -106,17 +107,44 @@ jobs:
           java-version: 17
           cache: maven
 
+      # --------------------------------------------------------
+      # VERIFY SELECTED ENVIRONMENT
+      # --------------------------------------------------------
+
+      - name: Verify environment
+        run: |
+          echo "=========================================="
+          echo "ENVIRONMENT VERIFICATION"
+          echo "=========================================="
+          echo "GitHub Event       : ${{ github.event_name }}"
+          echo "GitHub Input       : ${{ inputs.environment }}"
+          echo "Selected Environment: $TEST_ENVIRONMENT"
+          echo "=========================================="
+
+
+      # --------------------------------------------------------
+      # RUN MAVEN TESTS
+      # --------------------------------------------------------
+
       - name: Run Maven tests
         run: |
           echo "=========================================="
-          echo "Running API automation tests"
+          echo "RUNNING API AUTOMATION TESTS"
+          echo "=========================================="
           echo "Environment: $TEST_ENVIRONMENT"
           echo "=========================================="
+
+          echo "Running Maven with:"
+          echo "-Denv=$TEST_ENVIRONMENT"
 
           mvn -B clean test \
             -Denv="$TEST_ENVIRONMENT"
 
-      # Preserve test results even when tests fail
+
+      # --------------------------------------------------------
+      # PRESERVE TEST RESULTS
+      # --------------------------------------------------------
+
       - name: Upload Allure results
         if: always()
         uses: actions/upload-artifact@v6
@@ -162,6 +190,9 @@ jobs:
 
       - name: Generate Allure report
         run: |
+          echo "Generating Allure report..."
+          echo "Environment: $TEST_ENVIRONMENT"
+
           if [ -d target/allure-results ]; then
             allure generate target/allure-results \
               --clean \
@@ -204,14 +235,38 @@ jobs:
           name: allure-results-run-${{ github.run_number }}
           path: target/allure-results
 
+      - name: Verify summary environment
+        run: |
+          echo "=========================================="
+          echo "GENERATING TEST SUMMARY"
+          echo "=========================================="
+          echo "Environment: $TEST_ENVIRONMENT"
+          echo "=========================================="
+
       - name: Generate test summary
         run: |
-          echo "Generating test summary..."
-          echo "Environment: $TEST_ENVIRONMENT"
-
           python scripts/generate_test_summary.py \
             target/allure-results \
             target/test-summary.json
+
+      - name: Show generated environment
+        run: |
+          echo "=========================================="
+          echo "GENERATED JSON ENVIRONMENT"
+          echo "=========================================="
+
+          if [ -f target/test-summary.json ]; then
+            python -c "import json; data=json.load(open('target/test-summary.json')); print('JSON Environment:', data.get('environment', {}).get('Environment', 'NOT FOUND'))"
+          else
+            echo "test-summary.json not found"
+          fi
+
+          echo "=========================================="
+
+
+      # --------------------------------------------------------
+      # UPLOAD TEST SUMMARY
+      # --------------------------------------------------------
 
       - name: Upload test summary
         uses: actions/upload-artifact@v6
@@ -219,6 +274,7 @@ jobs:
           name: test-summary-run-${{ github.run_number }}
           path: target/test-summary.json
           retention-days: 7
+
 
       # ========================================================
       # GITHUB PAGES - PREPARE TEST SUMMARY

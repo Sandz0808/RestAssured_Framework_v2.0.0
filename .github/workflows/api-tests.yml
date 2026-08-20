@@ -5,7 +5,32 @@ on:
     branches:
       - master
 
+  # ==========================================================
+  # MANUAL RUN - ENVIRONMENT SELECTION
+  # ==========================================================
+
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Select environment to run tests against'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - dev
+          - qa
+          - staging
+          - uat
+          - prod
+
+
+# ==========================================================
+# GLOBAL ENVIRONMENT SELECTION
+# ==========================================================
+
+env:
+  TEST_ENVIRONMENT: ${{ github.event_name == 'workflow_dispatch' && inputs.environment || 'staging' }}
+
 
 jobs:
 
@@ -17,14 +42,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
       - name: Getting information
         run: |
           echo "=========================================="
           echo "Getting pipeline information..."
-          echo "Repository : ${{ github.repository }}"
-          echo "Branch     : ${{ github.ref_name }}"
-          echo "Run Number : ${{ github.run_number }}"
-          echo "Commit     : ${{ github.sha }}"
+          echo "Repository  : ${{ github.repository }}"
+          echo "Branch      : ${{ github.ref_name }}"
+          echo "Run Number  : ${{ github.run_number }}"
+          echo "Commit      : ${{ github.sha }}"
+          echo "Environment : $TEST_ENVIRONMENT"
           echo "=========================================="
 
 
@@ -52,6 +79,7 @@ jobs:
         run: |
           echo "=========================================="
           echo "Environment preparation completed."
+          echo "Target environment: $TEST_ENVIRONMENT"
           echo "Java version:"
           java -version
           echo "=========================================="
@@ -80,7 +108,13 @@ jobs:
 
       - name: Run Maven tests
         run: |
-          mvn -B clean test
+          echo "=========================================="
+          echo "Running API automation tests"
+          echo "Environment: $TEST_ENVIRONMENT"
+          echo "=========================================="
+
+          mvn -B clean test \
+            -Denvironment="$TEST_ENVIRONMENT"
 
       # Preserve test results even when tests fail
       - name: Upload Allure results
@@ -172,6 +206,9 @@ jobs:
 
       - name: Generate test summary
         run: |
+          echo "Generating test summary..."
+          echo "Environment: $TEST_ENVIRONMENT"
+
           python scripts/generate_test_summary.py \
             target/allure-results \
             target/test-summary.json
@@ -228,6 +265,7 @@ jobs:
               "run_attempt": "${{ github.run_attempt }}",
               "branch": "${{ github.ref_name }}",
               "commit": "${{ github.sha }}",
+              "environment": "${{ env.TEST_ENVIRONMENT }}",
               "status": "${{ needs.run-tests.result }}"
             }'
 

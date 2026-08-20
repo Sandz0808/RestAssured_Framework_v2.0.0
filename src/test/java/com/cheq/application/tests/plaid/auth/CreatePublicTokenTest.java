@@ -22,7 +22,7 @@ public class CreatePublicTokenTest extends Hooks {
 
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
-            groups = {"smoke", "plaid", "test"},
+            groups = {"smoke", "plaid"},
             description = "Validate successful creation of Public Token"
     )
     public void testCreatePublicTokenSuccessfully() {

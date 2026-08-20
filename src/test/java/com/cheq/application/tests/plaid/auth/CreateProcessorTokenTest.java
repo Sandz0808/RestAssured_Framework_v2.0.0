@@ -20,7 +20,7 @@ public class CreateProcessorTokenTest extends Hooks {
 
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
-            groups = {"smoke", "plaid", "test"},
+            groups = {"smoke", "plaid"},
             description = "Validate successful creation of Processor Token"
     )
     public void testCreateProcessorTokenSuccessfully() {

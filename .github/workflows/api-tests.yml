@@ -303,7 +303,9 @@ jobs:
 
   send-results:
     runs-on: ubuntu-latest
-    needs: generate-summary
+    needs:
+      - generate-summary
+      - deploy-pages
     if: always()
 
     steps:
@@ -335,7 +337,6 @@ jobs:
 
     needs:
       - generate-summary
-      - send-results
 
     if: always()
 

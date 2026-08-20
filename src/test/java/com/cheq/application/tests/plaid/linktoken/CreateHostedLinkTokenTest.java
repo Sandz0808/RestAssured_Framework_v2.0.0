@@ -17,7 +17,7 @@ public class CreateHostedLinkTokenTest extends Hooks {
 
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
-            groups = {"smoke", "plaid", "test"},
+            groups = {"smoke", "plaid"},
             description = "Validate successful creation of Hosted Link Token"
     )
     public void testCreateHostedLinkTokenSuccessfully() {

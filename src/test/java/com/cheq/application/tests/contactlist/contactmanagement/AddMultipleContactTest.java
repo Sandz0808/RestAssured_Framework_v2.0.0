@@ -4,12 +4,16 @@ import com.cheq.application.assertions.common.CommonAssertions;
 import com.cheq.application.assertions.schema.SchemaAssertions;
 import com.cheq.application.assertions.validation.ValidationAssertions;
 import com.cheq.application.hooks.Hooks;
+import com.cheq.application.models.contactlistmodel.contactrequestmodel.CreateContact;
 import com.cheq.application.tests.contactlist.reusables.ReusableTest;
 import com.cheq.application.utilities.AllureUtil;
 import io.qameta.allure.*;
 import io.restassured.response.Response;
 import com.cheq.application.listeners.RetryAnalyzer;
 import org.testng.annotations.Test;
+import static com.cheq.application.constants.contactlistconstant.ContactListHeaderConstant.*;
+import static com.cheq.application.constants.statuscode.StatusCodeConstant.*;
+import static com.cheq.application.utilities.JsonReaderUtil.getDatalist;
 
 
 @Epic("Contact List API Testing")
@@ -20,9 +24,12 @@ public class AddMultipleContactTest extends Hooks {
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
             groups = {"smoke", "contact", "test"},
-            description = "Validate Successful Add Multiple Contact"
+            description = "TC-Contact-001 - Validate Successful Add Multiple Contact"
     )
     public void testAddMultipleContactSuccessfully() {
+
+        // GET THE FIRST NAME IN THE addContact.json
+        String firstName = getDatalist("addContact",0, "firstName");
 
         // SIGNUP PROCESS
         Response createUserResponse = ReusableTest.signUp(0);
@@ -35,13 +42,13 @@ public class AddMultipleContactTest extends Hooks {
 
         // ASSERTIONS
         AllureUtil.steps("Validate Successful contact creation:     " + i + "");
-        CommonAssertions.verifyStatusCode(response, 201);
-        CommonAssertions.verifyHeader(response, "Content-Type", "application/json; charset=utf-8");
-        CommonAssertions.verifyResponseTime(response, 2000);
-        CommonAssertions.verifyBodyContainsText(response, "John");
+        CommonAssertions.verifyStatusCode(response, CREATED);
+        CommonAssertions.verifyHeader(response, CONTENT_TYPE, CONTENT_TYPE_HEADER);
+        CommonAssertions.verifyResponseTime(response, ALLOWED_RESPONSE_TIME);
+        CommonAssertions.verifyBodyContainsText(response, firstName);
         CommonAssertions.verifyResponseBody(response);
         SchemaAssertions.verifySchema(response, SchemaAssertions.SchemaType.CREATE_CONTACT_SCHEMA);
-        ValidationAssertions.verifyFieldEquals(response, "firstName", "John");
+        ValidationAssertions.verifyFieldEquals(response, "firstName", firstName);
         ValidationAssertions.verifyFieldExists(response, "email");
 
         }

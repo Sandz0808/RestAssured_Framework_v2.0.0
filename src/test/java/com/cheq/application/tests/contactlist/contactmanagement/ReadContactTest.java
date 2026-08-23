@@ -10,6 +10,9 @@ import io.restassured.response.Response;
 import com.cheq.application.listeners.RetryAnalyzer;
 import org.testng.annotations.Test;
 import com.cheq.application.services.contactlistservice.ContactService;
+import static com.cheq.application.constants.contactlistconstant.ContactListHeaderConstant.*;
+import static com.cheq.application.constants.statuscode.StatusCodeConstant.*;
+import static com.cheq.application.utilities.JsonReaderUtil.getDatalist;
 
 
 @Epic("Contact List API Testing")
@@ -20,9 +23,12 @@ public class ReadContactTest extends Hooks {
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
             groups = {"smoke", "contact", "test"},
-            description = "Validate Successful Read Contact"
+            description = "TC-Contact-006 - Validate Successful Read Contact"
     )
     public void testReadContactSuccessfully() {
+
+        // GET THE FIRST NAME IN THE ADD CONTACT addContact.json
+        String firstName = getDatalist("addContact",0, "firstName");
 
         // LOGIN PROCESS
         Response signUpResponse = ReusableTest.signUp(0);
@@ -39,12 +45,12 @@ public class ReadContactTest extends Hooks {
 
         // ASSERTIONS
         AllureUtil.steps("Validate Successful read contact");
-        CommonAssertions.verifyStatusCode(response, 200);
-        CommonAssertions.verifyHeader(response, "Content-Type", "application/json; charset=utf-8");
-        CommonAssertions.verifyResponseTime(response, 2000);
-        CommonAssertions.verifyBodyContainsText(response, "John");
+        CommonAssertions.verifyStatusCode(response, OK);
+        CommonAssertions.verifyHeader(response, CONTENT_TYPE, CONTENT_TYPE_HEADER);
+        CommonAssertions.verifyResponseTime(response, ALLOWED_RESPONSE_TIME);
+        CommonAssertions.verifyBodyContainsText(response, firstName);
         CommonAssertions.verifyResponseBody(response);
-        ValidationAssertions.verifyFieldEquals(response, "firstName", "John");
+        ValidationAssertions.verifyFieldEquals(response, "firstName", firstName);
         ValidationAssertions.verifyFieldExists(response, "email");
 
 

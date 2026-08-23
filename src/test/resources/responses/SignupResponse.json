@@ -1,10 +1,10 @@
 {
   "user" : {
-    "_id" : "6a86aa345e27410015f3254e",
+    "_id" : "6a8a3d8c81aa310015aeaa7a",
     "firstName" : "Sandrex",
     "lastName" : "Jimenez",
-    "email" : "teddy.pfannerstill@hotmail.com",
+    "email" : "shawn.glover@hotmail.com",
     "__v" : 1
   },
-  "token" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTg2YWEzNDVlMjc0MTAwMTVmMzI1NGUiLCJpYXQiOjE3ODcyMTAyOTJ9.3ir72IDJuAl2jHDmvsGOaakExvqE9E5i1Ef-gnOyC1U"
+  "token" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YThhM2Q4YzgxYWEzMTAwMTVhZWFhN2EiLCJpYXQiOjE3ODc0NDQ2MjB9.UlRa7nxpdWAAEl6pvX6kVVVbSPNAOlm_pEL2GUmwgxg"
 }

@@ -29,16 +29,16 @@ public class CreatUserTest {
 //        requestBody.put("email", uniqueEmail);
 //        requestBody.put("password", "SecurePassword123!");
 
-        CreateUser user = new CreateUser();
-        user.setFirstName("Sandro");
-        user.setLastName("Tester");
-        user.setEmail(uniqueEmail);
-        user.setPassword("SecurePassword123!");
+        CreateUser requestBody = new CreateUser();
+        requestBody.setFirstName("Sandro");
+        requestBody.setLastName("Tester");
+        requestBody.setEmail(uniqueEmail);
+        requestBody.setPassword("SecurePassword123!");
 
         // 2. Extract the entire Response object instead of just a string path
         Response response = given()
                 .contentType(ContentType.JSON)
-                .body(user)
+                .body(requestBody)
 
                 .when()
                 .post("/users")

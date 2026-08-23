@@ -9,6 +9,8 @@ import com.cheq.application.utilities.AllureUtil;
 import io.qameta.allure.*;
 import io.restassured.response.Response;
 import org.testng.annotations.Test;
+import static com.cheq.application.constants.contactlistconstant.ContactListHeaderConstant.*;
+import static com.cheq.application.constants.statuscode.StatusCodeConstant.*;
 
 
 @Epic("Plaid API Testing")
@@ -19,8 +21,8 @@ public class CreateLinkTokenTest extends Hooks {
     @Test(
             priority = 1,
             retryAnalyzer = RetryAnalyzer.class,
-            groups = {"smoke", "plaid"},
-            description = "Validate Successful Link Token Creation"
+            groups = {"smoke", "plaid", "test"},
+            description = "TC-Plaid-LinkToken-002 - Validate Successful Link Token Creation"
     )
     public void testCreateLinkTokenSuccessfully() {
 
@@ -29,9 +31,8 @@ public class CreateLinkTokenTest extends Hooks {
 
         // ASSERTIONS
         AllureUtil.steps("Validate Successful Link Token Creation");
-        CommonAssertions.verifyStatusCode(response, 200);
-        CommonAssertions.verifyHeader(response, "Content-Type", "application/json; charset=utf-8" );
-        //CommonAssertions.verifyResponseTime(response, 2000);
+        CommonAssertions.verifyStatusCode(response, OK);
+        CommonAssertions.verifyHeader(response, CONTENT_TYPE, CONTENT_TYPE_HEADER);
         ValidationAssertions.verifyFieldExists(response, "link_token");
         ValidationAssertions.verifyFieldExists(response, "expiration");
         ValidationAssertions.verifyFieldExists(response, "request_id" );

@@ -13,8 +13,10 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.restassured.response.Response;
 import org.testng.annotations.Test;
-
 import java.util.List;
+import static com.cheq.application.constants.contactlistconstant.ContactListHeaderConstant.*;
+import static com.cheq.application.constants.statuscode.StatusCodeConstant.*;
+
 
 @Epic("Plaid API Testing")
 @Feature("Authentication")
@@ -22,8 +24,8 @@ public class CreatePublicTokenTest extends Hooks {
 
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
-            groups = {"smoke", "plaid"},
-            description = "Validate successful creation of Public Token"
+            groups = {"smoke", "plaid", "test"},
+            description = "TC-Plaid-Auth-002 - Validate successful creation of Public Token"
     )
     public void testCreatePublicTokenSuccessfully() {
 
@@ -41,11 +43,9 @@ public class CreatePublicTokenTest extends Hooks {
 
         Response response = AuthenticationService.createPublicToken(payload);
 
-
         AllureUtil.steps("Validate Successful Public Token Creation");
-        CommonAssertions.verifyStatusCode(response, 200);
-        CommonAssertions.verifyHeader(response, "Content-Type", "application/json; charset=utf-8" );
-        //CommonAssertions.verifyResponseTime(response, 2000);
+        CommonAssertions.verifyStatusCode(response, OK);
+        CommonAssertions.verifyHeader(response, CONTENT_TYPE, CONTENT_TYPE_HEADER);
         ValidationAssertions.verifyFieldExists(response, "public_token");
         ValidationAssertions.verifyFieldExists(response, "request_id");
         CommonAssertions.verifyResponseBody(response);

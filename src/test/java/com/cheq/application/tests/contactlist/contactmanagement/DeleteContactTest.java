@@ -9,6 +9,7 @@ import io.qameta.allure.*;
 import io.restassured.response.Response;
 import org.testng.annotations.Test;
 import com.cheq.application.services.contactlistservice.ContactService;
+import static com.cheq.application.constants.statuscode.StatusCodeConstant.*;
 
 
 @Epic("Contact List API Testing")
@@ -18,7 +19,7 @@ public class DeleteContactTest extends Hooks {
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
             groups = {"smoke", "contact", "test"},
-            description = "Validate Successful Delete Contact"
+            description = "TC-Contact-004 - Validate Successful Delete Contact"
     )
     public void testDeleteContactSuccessfully() {
 
@@ -37,7 +38,7 @@ public class DeleteContactTest extends Hooks {
 
         // ASSERTIONS
         AllureUtil.steps("Validate Successful delete contact");
-        CommonAssertions.verifyStatusCode(response, 200);
+        CommonAssertions.verifyStatusCode(response, OK);
 
     }
 }

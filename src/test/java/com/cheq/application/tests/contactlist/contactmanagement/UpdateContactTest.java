@@ -11,6 +11,9 @@ import com.cheq.application.models.contactlistmodel.contactrequestmodel.UpdateCo
 import org.testng.annotations.Test;
 import com.cheq.application.payloads.contactlistpayload.contacts.UpdateContactPayload;
 import com.cheq.application.services.contactlistservice.ContactService;
+import static com.cheq.application.constants.contactlistconstant.ContactListHeaderConstant.*;
+import static com.cheq.application.constants.statuscode.StatusCodeConstant.*;
+import static com.cheq.application.utilities.JsonReaderUtil.getData;
 
 
 @Epic("Contact List API Testing")
@@ -21,9 +24,12 @@ public class UpdateContactTest extends Hooks {
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
             groups = {"smoke", "contact", "test"},
-            description = "Validate Successful Update Contact"
+            description = "TC-Contact-007 - Validate Successful Update Contact"
     )
     public void testUpdateContactSuccessfully() {
+
+        // GET THE FIRST NAME IN THE addContact.json
+        String updatedFirstName = getData("updateContact", "firstName");
 
         // SIGNUP PROCESS
         Response createUserResponse = ReusableTest.signUp(0);
@@ -42,10 +48,10 @@ public class UpdateContactTest extends Hooks {
 
         // ASSERTIONS
         AllureUtil.steps("Validate Successful update contact");
-        CommonAssertions.verifyStatusCode(response, 200);
-        CommonAssertions.verifyHeader(response, "Content-Type", "application/json; charset=utf-8");
-        CommonAssertions.verifyResponseTime(response, 2000);
-        CommonAssertions.verifyBodyContainsText(response, "UPDATED");
+        CommonAssertions.verifyStatusCode(response, OK);
+        CommonAssertions.verifyHeader(response,  CONTENT_TYPE, CONTENT_TYPE_HEADER);
+        CommonAssertions.verifyResponseTime(response, ALLOWED_RESPONSE_TIME);
+        CommonAssertions.verifyBodyContainsText(response, updatedFirstName);
         CommonAssertions.verifyResponseBody(response);
 
 

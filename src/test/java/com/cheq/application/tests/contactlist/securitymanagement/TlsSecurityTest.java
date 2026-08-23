@@ -1,19 +1,23 @@
-package com.cheq.application.tests.contactlist.security;
+package com.cheq.application.tests.contactlist.securitymanagement;
 
 import com.cheq.application.assertions.common.CommonAssertions;
 import com.cheq.application.hooks.Hooks;
 import com.cheq.application.listeners.RetryAnalyzer;
 import com.cheq.application.services.contactlistservice.TlsSecurityService;
+import com.cheq.application.utilities.AllureUtil;
 import com.cheq.application.utilities.ConfigReader;
 import com.cheq.application.utilities.LoggerUtil;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.restassured.response.Response;
+import org.checkerframework.checker.units.qual.A;
 import org.slf4j.Logger;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
 import javax.net.ssl.SSLException;
+import static com.cheq.application.constants.contactlistconstant.ContactListHeaderConstant.*;
+import static com.cheq.application.constants.statuscode.StatusCodeConstant.*;
+
 @Epic("Contact List API Testing")
 @Feature("Security Management")
 public class TlsSecurityTest extends Hooks {
@@ -30,7 +34,7 @@ public class TlsSecurityTest extends Hooks {
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
             groups = {"security", "tls", "test"},
-            description = "Verify HTTP requests are redirected to HTTPS"
+            description = "TC-Security-001 - Verify HTTP requests are redirected to HTTPS"
     )
     public void testHttpEnforcement() {
 
@@ -38,8 +42,9 @@ public class TlsSecurityTest extends Hooks {
                 TlsSecurityService.getHttpWithoutRedirect(
                         HTTP_ENDPOINT
                 );
-
-        if (response.statusCode() == 200) {
+        AllureUtil.steps("Verify HTTP requests are redirected to HTTPS");
+        CommonAssertions.verifyStatusCode(response, CREATED);
+        if (response.statusCode() == OK) {
 
             Assert.fail(
                     "API does not support redirect. "
@@ -49,15 +54,15 @@ public class TlsSecurityTest extends Hooks {
 
         CommonAssertions.verifyStatusCode(
                 response,
-                response.statusCode() == 301
-                        || response.statusCode() == 308
+                response.statusCode() == MOVED_PERMANENTLY
+                        || response.statusCode() == PERMANENT_REDIRECT
                         ? response.statusCode()
                         : 301
         );
 
         Assert.assertTrue(
-                response.statusCode() == 301
-                        || response.statusCode() == 308,
+                response.statusCode() == MOVED_PERMANENTLY
+                        || response.statusCode() == PERMANENT_REDIRECT,
                 "HTTP request should be redirected to HTTPS. "
                         + "Actual status: " + response.statusCode()
         );
@@ -70,7 +75,7 @@ public class TlsSecurityTest extends Hooks {
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
             groups = {"security", "tls", "test"},
-            description = "Verify TLS 1.0 connections are rejected"
+            description = "TC-Security-002 - Verify TLS 1.0 connections are rejected"
     )
     public void testTls10IsRejected() {
 
@@ -80,6 +85,7 @@ public class TlsSecurityTest extends Hooks {
                     HTTPS_ENDPOINT
             );
 
+            AllureUtil.steps("Verify TLS 1.0 connections are rejected");
             Assert.fail(
                     "Security vulnerability: "
                             + "API accepted TLS 1.0 connection."
@@ -101,7 +107,7 @@ public class TlsSecurityTest extends Hooks {
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
             groups = {"security", "tls", "test"},
-            description = "Verify TLS 1.2 connections are accepted"
+            description = "TC-Security-003 - Verify TLS 1.2 connections are accepted"
     )
     public void testTls12IsAccepted() {
 
@@ -110,14 +116,15 @@ public class TlsSecurityTest extends Hooks {
                         HTTPS_ENDPOINT
                 );
 
+        AllureUtil.steps("Verify TLS 1.2 connections are accepted");
         CommonAssertions.verifyStatusCode(
-                response,
-                200
+                response, OK
         );
 
         CommonAssertions.verifyResponseTime(
-                response,
-                2000
+                response, ALLOWED_RESPONSE_TIME
+
+
         );
     }
 }

@@ -5,6 +5,7 @@ import com.cheq.application.hooks.Hooks;
 import com.cheq.application.models.contactlistmodel.contactrequestmodel.CreateContact;
 import com.cheq.application.payloads.contactlistpayload.contacts.AddContactPayload;
 import com.cheq.application.tests.contactlist.reusables.ReusableTest;
+import com.cheq.application.utilities.AllureUtil;
 import com.cheq.application.utilities.ConcurrentRequestUtil;
 import io.qameta.allure.*;
 import io.restassured.response.Response;
@@ -15,6 +16,8 @@ import com.cheq.application.services.contactlistservice.ContactService;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
+import static com.cheq.application.constants.statuscode.StatusCodeConstant.*;
+
 
 @Epic("Contact List API Testing")
 @Feature("Add Contact Management")
@@ -24,7 +27,7 @@ public class ConcurrentAddContactTest extends Hooks {
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
             groups = {"smoke", "contact", "test"},
-            description = "Validate No Replay Back for Add Contact"
+            description = "TC-Contact-002 - Validate No Replay Back for Add Contact"
     )
     public void testConcurrentRequests() {
 
@@ -64,7 +67,8 @@ public class ConcurrentAddContactTest extends Hooks {
         System.out.println("Status 2: " + response2.statusCode());
 
         // ASSERTIONS
-        CommonAssertions.verifyStatusCode(response1, 201);
-        CommonAssertions.verifyStatusCode(response2, 409);
+        AllureUtil.steps("Validate No Replay Back for Add Contact");
+        CommonAssertions.verifyStatusCode(response1, CREATED);
+        CommonAssertions.verifyStatusCode(response2, CONFLICT);
     }
 }

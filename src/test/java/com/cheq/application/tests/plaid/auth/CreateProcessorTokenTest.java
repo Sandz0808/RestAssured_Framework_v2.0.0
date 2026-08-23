@@ -14,14 +14,18 @@ import io.qameta.allure.Feature;
 import io.restassured.response.Response;
 import org.testng.annotations.Test;
 
+import static com.cheq.application.constants.contactlistconstant.ContactListHeaderConstant.CONTENT_TYPE;
+import static com.cheq.application.constants.contactlistconstant.ContactListHeaderConstant.CONTENT_TYPE_HEADER;
+import static com.cheq.application.constants.statuscode.StatusCodeConstant.*;
+
 @Epic("Plaid API Testing")
 @Feature("Authentication")
 public class CreateProcessorTokenTest extends Hooks {
 
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
-            groups = {"smoke", "plaid"},
-            description = "Validate successful creation of Processor Token"
+            groups = {"smoke", "plaid", "test"},
+            description = "TC-Plaid-Auth-001 - Validate successful creation of Processor Token"
     )
     public void testCreateProcessorTokenSuccessfully() {
 
@@ -40,9 +44,8 @@ public class CreateProcessorTokenTest extends Hooks {
         Response response = AuthenticationService.createProcessorToken(payload);
 
         AllureUtil.steps("Validate Successful Processor  Token Creation");
-        CommonAssertions.verifyStatusCode(response, 200);
-        CommonAssertions.verifyHeader(response, "Content-Type", "application/json; charset=utf-8" );
-        //CommonAssertions.verifyResponseTime(response, 2000);
+        CommonAssertions.verifyStatusCode(response, OK);
+        CommonAssertions.verifyHeader(response, CONTENT_TYPE, CONTENT_TYPE_HEADER);
         ValidationAssertions.verifyFieldExists(response, "processor_token");
         ValidationAssertions.verifyFieldExists(response, "request_id");
         CommonAssertions.verifyResponseBody(response);

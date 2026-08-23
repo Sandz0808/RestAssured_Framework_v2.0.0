@@ -37,4 +37,19 @@ public final class StatusCodeConstant {
     public static final int BAD_GATEWAY = 502;
     public static final int SERVICE_UNAVAILABLE = 503;
     public static final int GATEWAY_TIMEOUT = 504;
+
+    // ==========================================================
+    // REDIRECTION
+    // ==========================================================
+
+    public static final int MULTIPLE_CHOICES = 300;
+    public static final int MOVED_PERMANENTLY = 301;
+    public static final int FOUND = 302;
+    public static final int SEE_OTHER = 303;
+    public static final int NOT_MODIFIED = 304;
+    public static final int USE_PROXY = 305;
+    public static final int TEMPORARY_REDIRECT = 307;
+    public static final int PERMANENT_REDIRECT = 308;
+
+
 }

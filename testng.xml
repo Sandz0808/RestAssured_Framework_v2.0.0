@@ -37,7 +37,7 @@
 
         <packages>
             <!-- =============== CONTACT LIST =================== -->
-            <package name="com.cheq.application.tests.contactlist.security"/>
+            <package name="com.cheq.application.tests.contactlist.securitymanagement"/>
             <package name="com.cheq.application.tests.contactlist.authentication"/>
             <package name="com.cheq.application.tests.contactlist.usermanagement"/>
             <package name="com.cheq.application.tests.contactlist.contactmanagement"/>

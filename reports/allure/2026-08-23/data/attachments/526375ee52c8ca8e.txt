@@ -1,0 +1,15 @@
+PLAID STATUS: 200
+PLAID RESPONSE: {
+    "processor_token": "processor-sandbox-71ab7a8b-6e26-40d4-befb-5da834ae36ee",
+    "request_id": "51146b896b6d78e"
+}
+Verifying Success Status Code. Expected: 200
+Status Code verification passed.
+Verifying Header: Content-Type
+Header 'Content-Type' verification passed.
+Verifying field 'processor_token' exists.
+Field 'processor_token' existence verification passed.
+Verifying field 'request_id' exists.
+Field 'request_id' existence verification passed.
+Verifying Response Body.
+Response Body verification passed.

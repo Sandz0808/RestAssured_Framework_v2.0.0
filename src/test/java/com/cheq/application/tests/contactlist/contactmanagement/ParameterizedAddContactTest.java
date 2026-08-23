@@ -4,6 +4,7 @@ import com.cheq.application.assertions.common.CommonAssertions;
 import com.cheq.application.hooks.Hooks;
 import com.cheq.application.listeners.RetryAnalyzer;
 import com.cheq.application.tests.contactlist.reusables.ReusableTest;
+import com.cheq.application.utilities.AllureUtil;
 import com.cheq.application.utilities.JsonReaderUtil;
 import com.cheq.application.utilities.LoggerUtil;
 import io.qameta.allure.Allure;
@@ -13,6 +14,7 @@ import io.restassured.response.Response;
 import org.slf4j.Logger;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import static com.cheq.application.constants.contactlistconstant.ContactListHeaderConstant.*;
 
 @Epic("Contact List API Testing")
 @Feature("Parameterized Add Contact")
@@ -30,7 +32,7 @@ public class ParameterizedAddContactTest extends Hooks {
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
             groups = {"sanity", "contact", "test"},
-            description = "Parameterized Add Contact That Covers Negative Scenarios",
+            description = "TC-Contact-005 - Parameterized Add Contact That Covers Negative Scenarios",
             dataProvider = "addContactTestData"
     )
     public void testParameterizedAddContact(int index) {
@@ -51,7 +53,8 @@ public class ParameterizedAddContactTest extends Hooks {
         log.info("=========== {} ===========", scenario);
 
         // COMMON ASSERTIONS
+        AllureUtil.steps("Parameterized Add Contact That Covers Negative Scenarios");
         CommonAssertions.verifyStatusCode( response, expectedStatusCode);
-        CommonAssertions.verifyResponseTime(response, 2000);
+        CommonAssertions.verifyResponseTime(response, ALLOWED_RESPONSE_TIME);
     }
 }

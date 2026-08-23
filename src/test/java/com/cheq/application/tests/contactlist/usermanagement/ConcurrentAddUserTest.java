@@ -5,14 +5,16 @@ import com.cheq.application.hooks.Hooks;
 import com.cheq.application.models.contactlistmodel.userrequestmodel.CreateUser;
 import com.cheq.application.payloads.contactlistpayload.users.CreateUserPayload;
 import com.cheq.application.services.contactlistservice.UserService;
+import com.cheq.application.utilities.AllureUtil;
 import com.cheq.application.utilities.ConcurrentRequestUtil;
 import com.cheq.application.listeners.RetryAnalyzer;
 import io.qameta.allure.*;
 import io.restassured.response.Response;
 import org.testng.annotations.Test;
-
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import static com.cheq.application.constants.statuscode.StatusCodeConstant.*;
+
 
 @Epic("Contact List API Testing")
 @Feature("Add User Management")
@@ -21,7 +23,7 @@ public class ConcurrentAddUserTest extends Hooks {
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
             groups = {"smoke", "user", "test"},
-            description = "Validate No Replay Back for Create User"
+            description = "TC-User-001 - Validate No Replay Back for Create User"
     )
     public void testConcurrentRequests() {
 
@@ -58,14 +60,15 @@ public class ConcurrentAddUserTest extends Hooks {
         System.out.println("Status 2: " + response2.statusCode());
 
         // ASSERTIONS
+        AllureUtil.steps("Validate No Replay Back for Create User");
         CommonAssertions.verifyStatusCode(
-                response1,
-                201
+                response1, CREATED
+
         );
 
         CommonAssertions.verifyStatusCode(
-                response2,
-                409
+                response2, CONFLICT
+
         );
     }
 }

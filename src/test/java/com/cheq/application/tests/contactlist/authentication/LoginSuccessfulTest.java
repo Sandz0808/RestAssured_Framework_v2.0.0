@@ -12,6 +12,7 @@ import com.cheq.application.listeners.RetryAnalyzer;
 import org.testng.annotations.Test;
 import static com.cheq.application.constants.contactlistconstant.ContactListHeaderConstant.*;
 import static com.cheq.application.constants.statuscode.StatusCodeConstant.*;
+import static com.cheq.application.utilities.JsonReaderUtil.getDatalist;
 
 
 @Epic("Contact List API Testing")
@@ -21,20 +22,23 @@ public class LoginSuccessfulTest extends Hooks {
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
             groups = {"smoke", "auth", "test"},
-            description = "Validate Successful User logged in"
+            description = "TC-Auth-002 - Validate Successful User logged in"
     )
     public void testSuccessfulUserLogin() {
+
+        // GET THE FIRST NAME IN THE userLogin.json
+        String firstName = getDatalist("userLogin",0, "email");
 
         LoginRequest payload = LoginPayload.createLogin(0);
         Response response = AuthenticationService.loginUser(payload);
 
-            Allure.step("Validate Successful Login");
-            CommonAssertions.verifyStatusCode(response, OK);
-            CommonAssertions.verifyHeader(response, CONTENT_TYPE, "application/json; charset=utf-8");
-            CommonAssertions.verifyResponseTime(response, 2000);
-            CommonAssertions.verifyBodyContainsText(response, "sjimena");
-            CommonAssertions.verifyResponseBody(response);
-            AuthAssertions.verifyTokenExists(response);
+        Allure.step("Validate Successful Login");
+        CommonAssertions.verifyStatusCode(response, OK);
+        CommonAssertions.verifyHeader(response, CONTENT_TYPE, CONTENT_TYPE_HEADER);
+        CommonAssertions.verifyResponseTime(response, ALLOWED_RESPONSE_TIME);
+        CommonAssertions.verifyBodyContainsText(response, firstName);
+        CommonAssertions.verifyResponseBody(response);
+        AuthAssertions.verifyTokenExists(response);
 
 
     }

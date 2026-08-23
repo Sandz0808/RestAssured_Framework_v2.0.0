@@ -18,16 +18,20 @@ public class InvalidTokenTest extends Hooks {
 
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
-            groups = {"smoke", "auth", "test"},
-            description = "Verify that API rejects an invalid or expired authentication token"
+            groups = {"smoke", "auth", "test", "critical"},
+            description = "TC-Auth-001 - Validated Invalid Token Test"
     )
     public void invalidTokenTest() {
 
-        UserService.createUser(CreateUserPayload.createValidUser(0));
+        // INDEX 0 FOR VALID USER
+        int validUser = 0;
+
+        UserService.createUser(CreateUserPayload.createValidUser(validUser));
         String token = "InvalidToken";
 
         Response response = UserService.readUser(token);
 
+        Allure.step("Verify that API rejects an invalid or expired authentication token");
         CommonAssertions.verifyStatusCode(response, UNAUTHORIZED);
         AuthAssertions.verifyAuthorizationToken(token);
     }

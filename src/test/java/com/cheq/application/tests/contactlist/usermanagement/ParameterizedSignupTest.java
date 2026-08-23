@@ -7,6 +7,7 @@ import com.cheq.application.models.contactlistmodel.userrequestmodel.CreateUser;
 import com.cheq.application.payloads.contactlistpayload.users.CreateUserPayload;
 import com.cheq.application.services.contactlistservice.AuthenticationService;
 import com.cheq.application.services.contactlistservice.UserService;
+import com.cheq.application.utilities.AllureUtil;
 import com.cheq.application.utilities.JsonReaderUtil;
 import com.cheq.application.utilities.LoggerUtil;
 import io.qameta.allure.Allure;
@@ -16,6 +17,7 @@ import io.restassured.response.Response;
 import org.slf4j.Logger;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import static com.cheq.application.constants.contactlistconstant.ContactListHeaderConstant.*;
 
 
 @Epic("Contact List API Testing")
@@ -36,7 +38,7 @@ public class ParameterizedSignupTest extends Hooks {
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
             groups = {"sanity", "user", "test"},
-            description = "Parameterized User Signup That Covers Negative Scenarios",
+            description = "TC-User-004 - Parameterized User Signup That Covers Negative Scenarios",
             dataProvider = "createUserTestData"
     )
     public void testParameterizedUserSignup(int index) {
@@ -54,8 +56,9 @@ public class ParameterizedSignupTest extends Hooks {
 
         log.info("=========== {} ===========", scenario);
 
+        AllureUtil.steps("Parameterized User Signup That Covers Negative Scenarios");
         CommonAssertions.verifyStatusCode(response, expectedStatusCode);
-        CommonAssertions.verifyResponseTime( response, 2000);
+        CommonAssertions.verifyResponseTime( response, ALLOWED_RESPONSE_TIME);
 
     }
 }

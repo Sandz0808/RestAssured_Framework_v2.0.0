@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import sys
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
@@ -9,6 +10,19 @@ from typing import Any
 
 
 VALID_STATUSES = {"passed", "failed", "broken", "skipped", "unknown"}
+
+
+def load_test_type() -> str:
+    """
+    Reads the test type passed from GitHub Actions.
+
+    Expected values:
+        smoke
+        regression
+
+    Defaults to smoke when TEST_TYPE is not provided.
+    """
+    return os.getenv("TEST_TYPE", "smoke").strip().lower()
 
 
 def parse_labels(result: dict[str, Any]) -> dict[str, str]:
@@ -36,6 +50,7 @@ def parameter_key(
         result: dict[str, Any],
         exclude_browser: bool = False,
 ) -> tuple[tuple[str, str], ...]:
+
     parameters: list[tuple[str, str]] = []
 
     for parameter in result.get("parameters") or []:
@@ -57,11 +72,20 @@ def logical_test_key(
         result: dict[str, Any],
         labels: dict[str, str],
 ) -> tuple[Any, ...]:
+
     return (
-        result.get("fullName") or result.get("name") or "unknown-test",
+        result.get("fullName")
+        or result.get("name")
+        or "unknown-test",
+
         labels.get("feature"),
+
         labels.get("story"),
-        parameter_key(result, exclude_browser=True),
+
+        parameter_key(
+            result,
+            exclude_browser=True,
+        ),
     )
 
 
@@ -69,38 +93,60 @@ def retry_group_key(
         result: dict[str, Any],
         labels: dict[str, str],
 ) -> tuple[Any, ...]:
+
     history_id = result.get("historyId")
 
     if history_id:
         return (str(history_id),)
 
     return (
-        result.get("fullName") or result.get("name") or "unknown-test",
+        result.get("fullName")
+        or result.get("name")
+        or "unknown-test",
+
         labels.get("feature"),
+
         labels.get("story"),
+
         parameter_key(result),
     )
 
 
-def load_results(results_directory: Path) -> list[dict[str, Any]]:
+def load_results(
+        results_directory: Path,
+) -> list[dict[str, Any]]:
+
     results: list[dict[str, Any]] = []
 
-    for result_file in sorted(results_directory.rglob("*-result.json")):
+    for result_file in sorted(
+            results_directory.rglob("*-result.json")
+    ):
+
         try:
-            with result_file.open("r", encoding="utf-8") as file:
+            with result_file.open(
+                    "r",
+                    encoding="utf-8",
+            ) as file:
+
                 result = json.load(file)
 
-        except (OSError, json.JSONDecodeError) as error:
+        except (
+                OSError,
+                json.JSONDecodeError,
+        ) as error:
+
             print(
                 f"Skipping invalid result file "
                 f"{result_file}: {error}"
             )
+
             continue
 
         labels = parse_labels(result)
 
         status = str(
-            result.get("status") or "unknown"
+            result.get("status")
+            or "unknown"
         ).lower()
 
         if status not in VALID_STATUSES:
@@ -111,81 +157,24 @@ def load_results(results_directory: Path) -> list[dict[str, Any]]:
                 "raw": result,
                 "labels": labels,
                 "status": status,
+
                 "logical_key": logical_test_key(
                     result,
                     labels,
                 ),
+
                 "retry_key": retry_group_key(
                     result,
                     labels,
                 ),
+
                 "start_ms": result.get("start"),
+
                 "stop_ms": result.get("stop"),
             }
         )
 
     return results
-
-
-def load_environment(
-        results_directory: Path,
-) -> dict[str, str]:
-    """
-    Reads Allure environment.properties.
-
-    Expected file:
-        target/allure-results/environment.properties
-
-    Example:
-        Environment=QA
-        Browser=Chrome
-        BaseURL=https://example.com
-    """
-
-    environment_file = (
-            results_directory / "environment.properties"
-    )
-
-    if not environment_file.is_file():
-        print(
-            "No environment.properties found. "
-            "Environment will be empty."
-        )
-        return {}
-
-    environment: dict[str, str] = {}
-
-    try:
-        with environment_file.open(
-                "r",
-                encoding="utf-8",
-        ) as file:
-
-            for line in file:
-                line = line.strip()
-
-                if (
-                        not line
-                        or line.startswith("#")
-                        or "=" not in line
-                ):
-                    continue
-
-                key, value = line.split("=", 1)
-
-                key = key.strip()
-                value = value.strip()
-
-                if key and value:
-                    environment[key] = value
-
-    except OSError as error:
-        print(
-            f"Unable to read environment.properties: "
-            f"{error}"
-        )
-
-    return environment
 
 
 def consolidate_retries(
@@ -206,8 +195,15 @@ def consolidate_retries(
 
         attempts.sort(
             key=lambda attempt: (
-                int(attempt["stop_ms"] or 0),
-                int(attempt["start_ms"] or 0),
+                int(
+                    attempt["stop_ms"]
+                    or 0
+                ),
+
+                int(
+                    attempt["start_ms"]
+                    or 0
+                ),
             )
         )
 
@@ -219,7 +215,8 @@ def consolidate_retries(
         }
 
         status_details = (
-                final_attempt["raw"].get("statusDetails")
+                final_attempt["raw"]
+                .get("statusDetails")
                 or {}
         )
 
@@ -229,9 +226,13 @@ def consolidate_retries(
             )
 
         final_attempt["is_flaky"] = (
-                bool(status_details.get("flaky"))
+                bool(
+                    status_details.get("flaky")
+                )
                 or (
-                        final_attempt["status"] == "passed"
+                        final_attempt["status"]
+                        == "passed"
+
                         and bool(
                     prior_statuses.intersection(
                         {
@@ -244,7 +245,9 @@ def consolidate_retries(
                 )
         )
 
-        final_results.append(final_attempt)
+        final_results.append(
+            final_attempt
+        )
 
     return final_results
 
@@ -257,9 +260,14 @@ def to_iso_timestamp(
         return None
 
     try:
-        value = int(epoch_milliseconds)
+        value = int(
+            epoch_milliseconds
+        )
 
-    except (TypeError, ValueError):
+    except (
+            TypeError,
+            ValueError,
+    ):
         return None
 
     return datetime.fromtimestamp(
@@ -273,9 +281,11 @@ def build_test_record(
 ) -> dict[str, Any]:
 
     raw = result["raw"]
+
     labels = result["labels"]
 
     start_ms = raw.get("start")
+
     stop_ms = raw.get("stop")
 
     duration_ms = None
@@ -284,13 +294,20 @@ def build_test_record(
             start_ms is not None
             and stop_ms is not None
     ):
+
         try:
+
             duration_ms = max(
                 0,
-                int(stop_ms) - int(start_ms),
+                int(stop_ms)
+                - int(start_ms),
                 )
 
-        except (TypeError, ValueError):
+        except (
+                TypeError,
+                ValueError,
+        ):
+
             duration_ms = None
 
     status_details = (
@@ -299,14 +316,18 @@ def build_test_record(
     )
 
     return {
-        "historyId": raw.get("historyId"),
+        "historyId": raw.get(
+            "historyId"
+        ),
 
         "testCaseName": (
                 raw.get("name")
                 or "Unnamed test"
         ),
 
-        "fullName": raw.get("fullName"),
+        "fullName": raw.get(
+            "fullName"
+        ),
 
         "suite": first_label(
             labels,
@@ -315,15 +336,25 @@ def build_test_record(
             "parentSuite",
         ),
 
-        "feature": labels.get("feature"),
+        "feature": labels.get(
+            "feature"
+        ),
 
-        "story": labels.get("story"),
+        "story": labels.get(
+            "story"
+        ),
 
-        "severity": labels.get("severity"),
+        "severity": labels.get(
+            "severity"
+        ),
 
-        "owner": labels.get("owner"),
+        "owner": labels.get(
+            "owner"
+        ),
 
-        "status": result["status"],
+        "status": result[
+            "status"
+        ],
 
         "startedAt": to_iso_timestamp(
             start_ms
@@ -335,12 +366,18 @@ def build_test_record(
 
         "durationMs": duration_ms,
 
-        "retryCount": result["retry_count"],
+        "retryCount": result[
+            "retry_count"
+        ],
 
-        "isFlaky": result["is_flaky"],
+        "isFlaky": result[
+            "is_flaky"
+        ],
 
-        "failureMessage": status_details.get(
-            "message"
+        "failureMessage": (
+            status_details.get(
+                "message"
+            )
         ),
     }
 
@@ -348,7 +385,7 @@ def build_test_record(
 def build_summary(
         raw_results: list[dict[str, Any]],
         final_results: list[dict[str, Any]],
-        environment: dict[str, str],
+        test_type: str,
 ) -> dict[str, Any]:
 
     status_counts = Counter(
@@ -369,8 +406,12 @@ def build_summary(
     ]
 
     duration_ms = (
-        max(stop_values) - min(start_values)
-        if start_values and stop_values
+        max(stop_values)
+        - min(start_values)
+
+        if start_values
+           and stop_values
+
         else 0
     )
 
@@ -378,19 +419,24 @@ def build_summary(
             status_counts["failed"] > 0
             or status_counts["broken"] > 0
     ):
+
         overall_status = "FAILED"
 
     elif status_counts["unknown"] > 0:
+
         overall_status = "UNKNOWN"
 
     elif (
             status_counts["skipped"]
             == len(final_results)
+
             and final_results
     ):
+
         overall_status = "SKIPPED"
 
     else:
+
         overall_status = "PASSED"
 
     return {
@@ -400,7 +446,11 @@ def build_summary(
             .isoformat()
         ),
 
-        "environment": environment,
+        # =====================================================
+        # INJECTED: TEST TYPE
+        # =====================================================
+
+        "testType": test_type,
 
         "run": {
             "status": overall_status,
@@ -416,21 +466,34 @@ def build_summary(
                 }
             ),
 
-            "passed": status_counts["passed"],
+            "passed": status_counts[
+                "passed"
+            ],
 
-            "failed": status_counts["failed"],
+            "failed": status_counts[
+                "failed"
+            ],
 
-            "broken": status_counts["broken"],
+            "broken": status_counts[
+                "broken"
+            ],
 
-            "skipped": status_counts["skipped"],
+            "skipped": status_counts[
+                "skipped"
+            ],
 
-            "unknown": status_counts["unknown"],
+            "unknown": status_counts[
+                "unknown"
+            ],
 
             "durationMs": duration_ms,
         },
 
         "tests": [
-            build_test_record(result)
+            build_test_record(
+                result
+            )
+
             for result in final_results
         ],
     }
@@ -438,11 +501,15 @@ def build_summary(
 
 def main() -> int:
 
-    if len(sys.argv) not in {2, 3}:
+    if len(sys.argv) not in {
+        2,
+        3,
+    }:
 
         print(
             "Usage: python generate_test_summary.py "
-            "<allure-results-directory> [output-json]"
+            "<allure-results-directory> "
+            "[output-json]"
         )
 
         return 2
@@ -453,8 +520,12 @@ def main() -> int:
 
     output_file = (
         Path(sys.argv[2])
+
         if len(sys.argv) == 3
-        else Path("target")
+
+        else Path(
+            "target"
+        )
              / "test-summary.json"
     )
 
@@ -467,13 +538,27 @@ def main() -> int:
 
         return 2
 
+    # =========================================================
+    # EXISTING ALLURE RESULT PROCESSING
+    # =========================================================
+
     raw_results = load_results(
         results_directory
     )
 
-    environment = load_environment(
-        results_directory
+    # =========================================================
+    # INJECTED: LOAD TEST TYPE
+    # =========================================================
+
+    test_type = load_test_type()
+
+    print(
+        f"Test Type: {test_type}"
     )
+
+    # =========================================================
+    # NO RESULTS
+    # =========================================================
 
     if not raw_results:
 
@@ -488,7 +573,11 @@ def main() -> int:
                 .isoformat()
             ),
 
-            "environment": environment,
+            # =================================================
+            # INJECTED: TEST TYPE
+            # =================================================
+
+            "testType": test_type,
 
             "run": {
                 "status": "NO_RESULTS",
@@ -515,14 +604,22 @@ def main() -> int:
 
     else:
 
+        # =====================================================
+        # EXISTING RETRY CONSOLIDATION
+        # =====================================================
+
         final_results = consolidate_retries(
             raw_results
         )
 
+        # =====================================================
+        # INJECTED: PASS TEST TYPE
+        # =====================================================
+
         summary = build_summary(
             raw_results,
             final_results,
-            environment,
+            test_type,
         )
 
     output_file.parent.mkdir(
@@ -548,18 +645,24 @@ def main() -> int:
     )
 
     print(
-        f"Environment: "
-        f"{summary['environment']} | "
+        f"Test Type: "
+        f"{summary['testType']} | "
+
         f"Status: "
         f"{summary['run']['status']} | "
+
         f"Total: "
         f"{summary['run']['totalTests']} | "
+
         f"Passed: "
         f"{summary['run']['passed']} | "
+
         f"Failed: "
         f"{summary['run']['failed']} | "
+
         f"Broken: "
         f"{summary['run']['broken']} | "
+
         f"Skipped: "
         f"{summary['run']['skipped']}"
     )
@@ -568,4 +671,6 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(
+        main()
+    )

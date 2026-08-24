@@ -6,7 +6,7 @@ on:
       - master
 
   # =========================================================
-  # MANUAL RUN - ENVIRONMENT SELECTION
+  # MANUAL RUN - ENVIRONMENT + TEST TYPE SELECTION
   # =========================================================
 
   workflow_dispatch:
@@ -23,13 +23,23 @@ on:
           - uat
           - prod
 
+      test_type:
+        description: 'Select test type to run'
+        required: true
+        default: 'smoke'
+        type: choice
+        options:
+          - smoke
+          - regression
+
 
 # ==========================================================
-# GLOBAL ENVIRONMENT SELECTION
+# GLOBAL ENVIRONMENT + TEST TYPE SELECTION
 # ==========================================================
 
 env:
   TEST_ENVIRONMENT: ${{ github.event_name == 'workflow_dispatch' && inputs.environment || 'staging' }}
+  TEST_TYPE: ${{ github.event_name == 'workflow_dispatch' && inputs.test_type || 'smoke' }}
 
 
 jobs:
@@ -53,6 +63,7 @@ jobs:
           echo "Commit      : ${{ github.sha }}"
           echo "Event       : ${{ github.event_name }}"
           echo "Environment : $TEST_ENVIRONMENT"
+          echo "Test Type   : $TEST_TYPE"
           echo "=========================================="
 
 
@@ -81,6 +92,7 @@ jobs:
           echo "=========================================="
           echo "Environment preparation completed."
           echo "Target environment: $TEST_ENVIRONMENT"
+          echo "Test type: $TEST_TYPE"
           echo "Java version:"
           java -version
           echo "=========================================="
@@ -108,17 +120,18 @@ jobs:
           cache: maven
 
       # --------------------------------------------------------
-      # VERIFY SELECTED ENVIRONMENT
+      # VERIFY SELECTED ENVIRONMENT + TEST TYPE
       # --------------------------------------------------------
 
-      - name: Verify environment
+      - name: Verify environment and test type
         run: |
           echo "=========================================="
-          echo "ENVIRONMENT VERIFICATION"
+          echo "PIPELINE VERIFICATION"
           echo "=========================================="
-          echo "GitHub Event       : ${{ github.event_name }}"
-          echo "GitHub Input       : ${{ inputs.environment }}"
+          echo "GitHub Event        : ${{ github.event_name }}"
+          echo "GitHub Environment  : ${{ inputs.environment }}"
           echo "Selected Environment: $TEST_ENVIRONMENT"
+          echo "Selected Test Type  : $TEST_TYPE"
           echo "=========================================="
 
 
@@ -132,13 +145,16 @@ jobs:
           echo "RUNNING API AUTOMATION TESTS"
           echo "=========================================="
           echo "Environment: $TEST_ENVIRONMENT"
+          echo "Test Type  : $TEST_TYPE"
           echo "=========================================="
 
           echo "Running Maven with:"
           echo "-Denv=$TEST_ENVIRONMENT"
+          echo "-DtestType=$TEST_TYPE"
 
           mvn -B clean test \
-            -Denv="$TEST_ENVIRONMENT"
+            -Denv="$TEST_ENVIRONMENT" \
+            -DtestType="$TEST_TYPE"
 
 
       # --------------------------------------------------------
@@ -192,6 +208,7 @@ jobs:
         run: |
           echo "Generating Allure report..."
           echo "Environment: $TEST_ENVIRONMENT"
+          echo "Test Type: $TEST_TYPE"
 
           if [ -d target/allure-results ]; then
             allure generate target/allure-results \
@@ -241,6 +258,7 @@ jobs:
           echo "GENERATING TEST SUMMARY"
           echo "=========================================="
           echo "Environment: $TEST_ENVIRONMENT"
+          echo "Test Type: $TEST_TYPE"
           echo "=========================================="
 
       - name: Generate test summary
@@ -324,6 +342,7 @@ jobs:
               "branch": "${{ github.ref_name }}",
               "commit": "${{ github.sha }}",
               "environment": "${{ env.TEST_ENVIRONMENT }}",
+              "testType": "${{ env.TEST_TYPE }}",
               "status": "${{ needs.run-tests.result }}"
             }'
 

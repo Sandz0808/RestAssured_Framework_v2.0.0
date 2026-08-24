@@ -74,7 +74,7 @@ public class TlsSecurityTest extends Hooks {
      */
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
-            groups = {"security", "tls", "test"},
+            groups = {"smoke", "security", "tls", "test"},
             description = "TC-Security-002 - Verify TLS 1.0 connections are rejected"
     )
     public void testTls10IsRejected() {
@@ -106,7 +106,7 @@ public class TlsSecurityTest extends Hooks {
      */
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
-            groups = {"regression", "smoke", "security", "tls", "test"},
+            groups = {"smoke", "security", "tls", "test"},
             description = "TC-Security-003 - Verify TLS 1.2 connections are accepted"
     )
     public void testTls12IsAccepted() {

@@ -17,8 +17,6 @@
           default: 'staging'
           type: choice
           options:
-            - dev
-            - qa
             - staging
             - uat
             - prod

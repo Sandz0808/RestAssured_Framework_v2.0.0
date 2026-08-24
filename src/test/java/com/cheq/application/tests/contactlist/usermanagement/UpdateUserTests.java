@@ -21,7 +21,7 @@ public class UpdateUserTests extends Hooks {
 
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
-            groups = {"regression", "smoke", "user", "test"},
+            groups = {"regression", "user", "test"},
             description = "TC-User-006 - Validate Successful update user"
     )
     public void testUpdateUser() {

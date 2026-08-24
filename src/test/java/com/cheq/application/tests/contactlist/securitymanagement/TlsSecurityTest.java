@@ -33,7 +33,7 @@ public class TlsSecurityTest extends Hooks {
      */
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
-            groups = {"security", "tls", "test"},
+            groups = {"smoke", "security", "tls", "test"},
             description = "TC-Security-001 - Verify HTTP requests are redirected to HTTPS"
     )
     public void testHttpEnforcement() {

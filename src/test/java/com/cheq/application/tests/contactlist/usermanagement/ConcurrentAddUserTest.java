@@ -22,7 +22,7 @@ public class ConcurrentAddUserTest extends Hooks {
 
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
-            groups = {"regression", "smoke", "user", "test"},
+            groups = {"regression", "user", "test"},
             description = "TC-User-001 - Validate No Replay Back for Create User"
     )
     public void testConcurrentRequests() {

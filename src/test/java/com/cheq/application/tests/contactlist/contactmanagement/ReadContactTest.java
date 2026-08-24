@@ -22,7 +22,7 @@ public class ReadContactTest extends Hooks {
 
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
-            groups = {"regression", "smoke", "contact", "test"},
+            groups = {"regression", "contact", "test"},
             description = "TC-Contact-006 - Validate Successful Read Contact"
     )
     public void testReadContactSuccessfully() {

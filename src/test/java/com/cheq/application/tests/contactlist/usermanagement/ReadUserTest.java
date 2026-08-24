@@ -20,7 +20,7 @@ public class ReadUserTest extends Hooks {
 
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
-            groups = {"regression", "smoke", "user", "test"},
+            groups = {"regression", "user", "test"},
             description = "TC-User-005 - Validate Successful read user"
     )
     public void testReadUser() {

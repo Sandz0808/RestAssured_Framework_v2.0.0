@@ -19,7 +19,7 @@ public class CreateHostedLinkTokenTest extends Hooks {
 
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
-            groups = {"regression", "smoke", "plaid", "test"},
+            groups = {"smoke", "plaid", "test"},
             description = "TC-Plaid-LinkToken-001 - Validate successful creation of Hosted Link Token"
     )
     public void testCreateHostedLinkTokenSuccessfully() {

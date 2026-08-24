@@ -24,7 +24,7 @@ public class CreateProcessorTokenTest extends Hooks {
 
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
-            groups = {"regression", "smoke", "plaid", "test"},
+            groups = {"smoke", "plaid", "test"},
             description = "TC-Plaid-Auth-001 - Validate successful creation of Processor Token"
     )
     public void testCreateProcessorTokenSuccessfully() {

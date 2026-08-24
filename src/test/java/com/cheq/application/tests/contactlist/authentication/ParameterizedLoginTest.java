@@ -34,7 +34,7 @@ public class ParameterizedLoginTest extends Hooks {
 
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
-            groups = {"regression", "smoke", "auth", "test"},
+            groups = {"smoke", "auth", "test"},
             description = "TC-Auth-004 - Parameterized Login That Covers Negative Scenarios",
             dataProvider = "loginTestData"
     )

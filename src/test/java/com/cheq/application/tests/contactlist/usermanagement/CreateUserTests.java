@@ -23,7 +23,7 @@ public class CreateUserTests extends Hooks {
 
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
-            groups = {"regression", "smoke", "user", "test",},
+            groups = {"regression", "user", "test",},
             description = "TC-User-002 - Validate Successful user creation"
     )
 

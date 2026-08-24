@@ -18,7 +18,7 @@ public class InvalidTokenTest extends Hooks {
 
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
-            groups = {"regression", "smoke", "auth", "test", "critical"},
+            groups = {"smoke", "auth", "test", "critical"},
             description = "TC-Auth-001 - Validated Invalid Token Test"
     )
     public void invalidTokenTest() {

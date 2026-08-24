@@ -21,7 +21,7 @@ public class CreateLinkTokenTest extends Hooks {
     @Test(
             priority = 1,
             retryAnalyzer = RetryAnalyzer.class,
-            groups = {"regression", "smoke", "plaid", "test"},
+            groups = {"regression", "plaid", "test"},
             description = "TC-Plaid-LinkToken-002 - Validate Successful Link Token Creation"
     )
     public void testCreateLinkTokenSuccessfully() {

@@ -26,7 +26,7 @@ public class ConcurrentAddContactTest extends Hooks {
 
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
-            groups = {"regression", "smoke", "contact", "test"},
+            groups = {"regression", "contact", "test"},
             description = "TC-Contact-002 - Validate No Replay Back for Add Contact"
     )
     public void testConcurrentRequests() {

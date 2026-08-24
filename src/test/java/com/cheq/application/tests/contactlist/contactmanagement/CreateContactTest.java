@@ -21,7 +21,7 @@ public class CreateContactTest extends Hooks {
 
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
-            groups = {"regression", "smoke", "contact", "test"},
+            groups = {"regression", "contact", "test"},
             description = "TC-Contact-003 - Validate Successful Add Contact"
     )
     public void testAddContactSuccessfully() {

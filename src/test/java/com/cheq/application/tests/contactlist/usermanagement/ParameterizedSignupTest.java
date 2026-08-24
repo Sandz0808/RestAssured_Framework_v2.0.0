@@ -37,7 +37,7 @@ public class ParameterizedSignupTest extends Hooks {
 
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
-            groups = {"regression", "smoke", "user", "test"},
+            groups = {"regression", "user", "test"},
             description = "TC-User-004 - Parameterized User Signup That Covers Negative Scenarios",
             dataProvider = "createUserTestData"
     )

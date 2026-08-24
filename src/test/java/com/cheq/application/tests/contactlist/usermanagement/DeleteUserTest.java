@@ -18,7 +18,7 @@ public class DeleteUserTest extends Hooks {
 
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
-            groups = {"smoke", "user", "test"},
+            groups = {"regression", "smoke", "user", "test"},
             description = "TC-User-003 - Validate Successful delete user"
     )
     public void testDeleteUser() {

@@ -106,7 +106,7 @@ public class TlsSecurityTest extends Hooks {
      */
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
-            groups = {"security", "tls", "test"},
+            groups = {"regression", "smoke", "security", "tls", "test"},
             description = "TC-Security-003 - Verify TLS 1.2 connections are accepted"
     )
     public void testTls12IsAccepted() {

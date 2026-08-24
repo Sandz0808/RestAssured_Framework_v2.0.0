@@ -23,7 +23,7 @@ public class AddMultipleContactTest extends Hooks {
 
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
-            groups = {"smoke", "contact", "test"},
+            groups = {"regression", "smoke", "contact", "test"},
             description = "TC-Contact-001 - Validate Successful Add Multiple Contact"
     )
     public void testAddMultipleContactSuccessfully() {

@@ -31,7 +31,7 @@ public class ParameterizedAddContactTest extends Hooks {
 
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
-            groups = {"sanity", "contact", "test"},
+            groups = {"Regression", "smoke", "contact", "test"},
             description = "TC-Contact-005 - Parameterized Add Contact That Covers Negative Scenarios",
             dataProvider = "addContactTestData"
     )

@@ -24,7 +24,7 @@ public class CreatePublicTokenTest extends Hooks {
 
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
-            groups = {"smoke", "plaid", "test"},
+            groups = {"regression", "smoke", "plaid", "test"},
             description = "TC-Plaid-Auth-002 - Validate successful creation of Public Token"
     )
     public void testCreatePublicTokenSuccessfully() {

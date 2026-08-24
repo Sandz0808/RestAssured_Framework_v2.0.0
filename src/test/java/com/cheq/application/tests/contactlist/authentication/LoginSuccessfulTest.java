@@ -21,7 +21,7 @@ public class LoginSuccessfulTest extends Hooks {
 
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
-            groups = {"smoke", "auth", "test"},
+            groups = {"regression", "smoke", "auth", "test"},
             description = "TC-Auth-002 - Validate Successful User logged in"
     )
     public void testSuccessfulUserLogin() {

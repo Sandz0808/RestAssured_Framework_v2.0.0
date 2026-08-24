@@ -44,7 +44,7 @@
     <inspection_tool class="groupsTestNG" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="groups">
         <value>
-          <list size="16">
+          <list size="17">
             <item index="0" class="java.lang.String" itemvalue="smoke" />
             <item index="1" class="java.lang.String" itemvalue="test" />
             <item index="2" class="java.lang.String" itemvalue="user" />
@@ -61,6 +61,7 @@
             <item index="13" class="java.lang.String" itemvalue="runall" />
             <item index="14" class="java.lang.String" itemvalue="runAll" />
             <item index="15" class="java.lang.String" itemvalue="critical" />
+            <item index="16" class="java.lang.String" itemvalue="Regression" />
           </list>
         </value>
       </option>

@@ -19,7 +19,7 @@ public class LogoutSuccessfulTest extends Hooks {
 
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
-            groups = {"smoke", "auth", "test"},
+            groups = {"regression", "smoke", "auth", "test"},
             description = "TC-Auth-003 - Validate Successful User Logged out"
     )
     public void testSuccessfulUserLogout() {

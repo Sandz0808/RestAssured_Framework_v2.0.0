@@ -18,7 +18,7 @@ public class DeleteContactTest extends Hooks {
 
     @Test(
             retryAnalyzer = RetryAnalyzer.class,
-            groups = {"smoke", "contact", "test"},
+            groups = {"regression", "smoke", "contact", "test"},
             description = "TC-Contact-004 - Validate Successful Delete Contact"
     )
     public void testDeleteContactSuccessfully() {

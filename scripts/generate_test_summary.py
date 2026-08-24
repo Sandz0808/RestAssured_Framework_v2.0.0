@@ -177,6 +177,67 @@ def load_results(
     return results
 
 
+def load_environment(
+        results_directory: Path,
+) -> dict[str, str]:
+    """
+    Reads Allure environment.properties.
+
+    Expected file:
+        target/allure-results/environment.properties
+
+    Example:
+        Environment=staging
+        Framework=Rest Assured
+        TestType=smoke
+    """
+
+    environment_file = (
+            results_directory / "environment.properties"
+    )
+
+    if not environment_file.is_file():
+        print(
+            "No environment.properties found. "
+            "Environment will be empty."
+        )
+        return {}
+
+    environment: dict[str, str] = {}
+
+    try:
+        with environment_file.open(
+                "r",
+                encoding="utf-8",
+        ) as file:
+
+            for line in file:
+                line = line.strip()
+
+                if (
+                        not line
+                        or line.startswith("#")
+                        or "=" not in line
+                ):
+                    continue
+
+                key, value = line.split("=", 1)
+
+                key = key.strip()
+                value = value.strip()
+
+                if key and value:
+                    environment[key] = value
+
+    except OSError as error:
+        print(
+            f"Unable to read environment.properties: "
+            f"{error}"
+        )
+
+    return environment
+
+
 def consolidate_retries(
         raw_results: list[dict[str, Any]],
 ) -> list[dict[str, Any]]:
@@ -385,6 +446,7 @@ def build_test_record(
 def build_summary(
         raw_results: list[dict[str, Any]],
         final_results: list[dict[str, Any]],
+        environment: dict[str, str],
         test_type: str,
 ) -> dict[str, Any]:
 
@@ -445,6 +507,8 @@ def build_summary(
             .astimezone()
             .isoformat()
         ),
+
+        "environment": environment,
 
         # =====================================================
         # INJECTED: TEST TYPE
@@ -547,8 +611,12 @@ def main() -> int:
     )
 
     # =========================================================
-    # INJECTED: LOAD TEST TYPE
+    # INJECTED: LOAD ENVIRONMENT + TEST TYPE
     # =========================================================
+
+    environment = load_environment(
+        results_directory
+    )
 
     test_type = load_test_type()
 
@@ -572,6 +640,8 @@ def main() -> int:
                 .astimezone()
                 .isoformat()
             ),
+
+            "environment": environment,
 
             # =================================================
             # INJECTED: TEST TYPE
@@ -619,6 +689,7 @@ def main() -> int:
         summary = build_summary(
             raw_results,
             final_results,
+            environment,
             test_type,
         )
 

@@ -1,374 +1,376 @@
-name: API Automation + Allure Report
+  name: API Automation + Allure Report
 
-on:
-  push:
-    branches:
-      - master
+  on:
+    push:
+      branches:
+        - master
 
-  # =========================================================
-  # MANUAL RUN - ENVIRONMENT + TEST TYPE SELECTION
-  # =========================================================
+    # =========================================================
+    # MANUAL RUN - ENVIRONMENT + TEST TYPE SELECTION
+    # =========================================================
 
-  workflow_dispatch:
-    inputs:
+    workflow_dispatch:
+      inputs:
+        environment:
+          description: 'Select environment to run tests against'
+          required: true
+          default: 'staging'
+          type: choice
+          options:
+            - dev
+            - qa
+            - staging
+            - uat
+            - prod
+
+        test_type:
+          description: 'Select test type to run'
+          required: true
+          default: 'smoke'
+          type: choice
+          options:
+            - smoke
+            - regression
+
+
+  # ==========================================================
+  # GLOBAL ENVIRONMENT + TEST TYPE SELECTION
+  # ==========================================================
+
+  env:
+    TEST_ENVIRONMENT: ${{ github.event_name == 'workflow_dispatch' && inputs.environment || 'staging' }}
+    TEST_TYPE: ${{ github.event_name == 'workflow_dispatch' && inputs.test_type || 'smoke' }}
+
+
+  jobs:
+
+    # ==========================================================
+    # 1. GETTING INFORMATION
+    # ==========================================================
+
+    getting-information:
+      runs-on: ubuntu-latest
+
+      steps:
+
+        - name: Getting information
+          run: |
+            echo "=========================================="
+            echo "Getting pipeline information..."
+            echo "Repository  : ${{ github.repository }}"
+            echo "Branch      : ${{ github.ref_name }}"
+            echo "Run Number  : ${{ github.run_number }}"
+            echo "Commit      : ${{ github.sha }}"
+            echo "Event       : ${{ github.event_name }}"
+            echo "Environment : $TEST_ENVIRONMENT"
+            echo "Test Type   : $TEST_TYPE"
+            echo "=========================================="
+    
+
+    # ==========================================================
+    # 2. PREPARING ENVIRONMENT
+    # ==========================================================
+
+    preparing-environment:
+      runs-on: ubuntu-latest
+      needs: getting-information
+
+      steps:
+
+        - name: Checkout repository
+          uses: actions/checkout@v5
+
+        - name: Set up JDK 17
+          uses: actions/setup-java@v5
+          with:
+            distribution: temurin
+            java-version: 17
+            cache: maven
+
+        - name: Environment ready
+          run: |
+            echo "=========================================="
+            echo "Environment preparation completed."
+            echo "Target environment: $TEST_ENVIRONMENT"
+            echo "Test type: $TEST_TYPE"
+            echo "Java version:"
+            java -version
+            echo "=========================================="
+    
+
+    # ==========================================================
+    # 3. RUNNING TESTS
+    # ==========================================================
+
+    run-tests:
+      runs-on: ubuntu-latest
+      needs: preparing-environment
+      timeout-minutes: 30
+
+      steps:
+
+        - name: Checkout repository
+          uses: actions/checkout@v5
+
+        - name: Set up JDK 17
+          uses: actions/setup-java@v5
+          with:
+            distribution: temurin
+            java-version: 17
+            cache: maven
+
+        # --------------------------------------------------------
+        # VERIFY SELECTED ENVIRONMENT + TEST TYPE
+        # --------------------------------------------------------
+
+        - name: Verify environment and test type
+          run: |
+            echo "=========================================="
+            echo "PIPELINE VERIFICATION"
+            echo "=========================================="
+            echo "GitHub Event        : ${{ github.event_name }}"
+            echo "GitHub Environment  : ${{ inputs.environment }}"
+            echo "Selected Environment: $TEST_ENVIRONMENT"
+            echo "Selected Test Type  : $TEST_TYPE"
+            echo "=========================================="
+        
+
+        # --------------------------------------------------------
+        # RUN MAVEN TESTS
+        # --------------------------------------------------------
+
+        - name: Run Maven tests
+          run: |
+            echo "=========================================="
+            echo "RUNNING API AUTOMATION TESTS"
+            echo "=========================================="
+            echo "Environment: $TEST_ENVIRONMENT"
+            echo "Test Type  : $TEST_TYPE"
+            echo "=========================================="
+            
+            echo "Running Maven with:"
+            echo "-Denv=$TEST_ENVIRONMENT"
+            echo "-DtestType=$TEST_TYPE"
+            echo "-Dgroups=$TEST_TYPE"
+            
+            mvn -B clean test \
+              -Denv="$TEST_ENVIRONMENT" \
+              -DtestType="$TEST_TYPE" \
+              -Dgroups="$TEST_TYPE"
+        
+
+        # --------------------------------------------------------
+        # PRESERVE TEST RESULTS
+        # -------------------------------------------------------
+
+        - name: Upload Allure results
+          if: always()
+          uses: actions/upload-artifact@v6
+          with:
+            name: allure-results-run-${{ github.run_number }}
+            path: target/allure-results
+            if-no-files-found: ignore
+            retention-days: 7
+
+
+    # ==========================================================
+    # 4. GENERATE ALLURE REPORT
+    # ==========================================================
+
+    generate-allure:
+      runs-on: ubuntu-latest
+      needs: run-tests
+      if: always()
+
+      steps:
+
+        - name: Checkout repository
+          uses: actions/checkout@v5
+
+        - name: Download Allure results
+          uses: actions/download-artifact@v6
+          with:
+            name: allure-results-run-${{ github.run_number }}
+            path: target/allure-results
+
+        - name: Install Allure CLI
+          run: |
+            sudo apt-get update
+            sudo apt-get install -y wget unzip
+            
+            wget https://github.com/allure-framework/allure2/releases/download/2.29.0/allure-2.29.0.zip
+            
+            unzip allure-2.29.0.zip
+            
+            sudo mv allure-2.29.0 /opt/allure
+            
+            sudo ln -s /opt/allure/bin/allure /usr/bin/allure
+
+        - name: Generate Allure report
+          run: |
+            echo "Generating Allure report..."
+            echo "Environment: $TEST_ENVIRONMENT"
+            echo "Test Type: $TEST_TYPE"
+            
+            if [ -d target/allure-results ]; then
+              allure generate target/allure-results \
+                --clean \
+                --single-file \
+                -o target/allure-report
+            else
+              echo "No Allure results found."
+            
+              mkdir -p target/allure-report
+            
+              echo "No Allure results generated." \
+                > target/allure-report/README.txt
+            fi
+
+        - name: Upload Allure report artifact
+          uses: actions/upload-artifact@v6
+          with:
+            name: allure-report-run-${{ github.run_number }}-attempt-${{ github.run_attempt }}
+            path: target/allure-report
+            retention-days: 7
+
+
+    # ==========================================================
+    # 5. GENERATE TEST SUMMARY
+    # ==========================================================
+
+    generate-summary:
+      runs-on: ubuntu-latest
+      needs: generate-allure
+      if: always()
+
+      steps:
+
+        - name: Checkout repository
+          uses: actions/checkout@v5
+
+        - name: Download Allure results
+          uses: actions/download-artifact@v6
+          with:
+            name: allure-results-run-${{ github.run_number }}
+            path: target/allure-results
+
+        - name: Verify summary environment
+          run: |
+            echo "=========================================="
+            echo "GENERATING TEST SUMMARY"
+            echo "=========================================="
+            echo "Environment: $TEST_ENVIRONMENT"
+            echo "Test Type: $TEST_TYPE"
+            echo "=========================================="
+
+        - name: Generate test summary
+          run: |
+            python scripts/generate_test_summary.py \
+              target/allure-results \
+              target/test-summary.json
+
+        - name: Show generated environment
+          run: |
+            echo "=========================================="
+            echo "GENERATED JSON ENVIRONMENT"
+            echo "=========================================="
+            
+            if [ -f target/test-summary.json ]; then
+              python -c "import json; data=json.load(open('target/test-summary.json')); print('JSON Environment:', data.get('environment', {}).get('Environment', 'NOT FOUND'))"
+            else
+              echo "test-summary.json not found"
+            fi
+            
+            echo "=========================================="
+        
+
+        # --------------------------------------------------------
+        # UPLOAD TEST SUMMARY
+        # --------------------------------------------------------
+
+        - name: Upload test summary
+          uses: actions/upload-artifact@v6
+          with:
+            name: test-summary-run-${{ github.run_number }}
+            path: target/test-summary.json
+            retention-days: 7
+
+
+        # ========================================================
+        # GITHUB PAGES - PREPARE TEST SUMMARY
+        # ========================================================
+
+        - name: Prepare GitHub Pages content
+          run: |
+            mkdir -p pages
+            
+            if [ -f target/test-summary.json ]; then
+              cp target/test-summary.json pages/test-summary.json
+            else
+              echo '{"error":"test-summary.json not found"}' \
+                > pages/test-summary.json
+            fi
+
+        - name: Upload GitHub Pages artifact
+          uses: actions/upload-pages-artifact@v4
+          with:
+            path: pages
+
+
+    # ==========================================================
+    # 6. SEND RESULTS TO POWER AUTOMATE
+    # ==========================================================
+
+    send-results:
+      runs-on: ubuntu-latest
+      needs:
+        - generate-summary
+        - deploy-pages
+      if: always()
+
+      steps:
+
+        - name: Trigger Power Automate
+          env:
+            POWER_AUTOMATE_URL: ${{ secrets.POWER_AUTOMATE_URL }}
+
+          run: |
+            curl -X POST "$POWER_AUTOMATE_URL" \
+              -H "Content-Type: application/json" \
+              -d '{
+                "repository": "${{ github.repository }}",
+                "run_number": "${{ github.run_number }}",
+                "run_attempt": "${{ github.run_attempt }}",
+                "branch": "${{ github.ref_name }}",
+                "commit": "${{ github.sha }}",
+                "environment": "${{ env.TEST_ENVIRONMENT }}",
+                "testType": "${{ env.TEST_TYPE }}",
+                "status": "${{ needs.run-tests.result }}"
+              }'
+    
+
+    # ==========================================================
+    # 7. DEPLOY TEST SUMMARY TO GITHUB PAGES
+    # ==========================================================
+
+    deploy-pages:
+      runs-on: ubuntu-latest
+
+      needs:
+        - generate-summary
+
+      if: always()
+
+      permissions:
+        pages: write
+        id-token: write
+
       environment:
-        description: 'Select environment to run tests against'
-        required: true
-        default: 'staging'
-        type: choice
-        options:
-          - dev
-          - qa
-          - staging
-          - uat
-          - prod
+        name: github-pages
+        url: ${{ steps.deployment.outputs.page_url }}
 
-      test_type:
-        description: 'Select test type to run'
-        required: true
-        default: 'smoke'
-        type: choice
-        options:
-          - smoke
-          - regression
+      steps:
 
-
-# ==========================================================
-# GLOBAL ENVIRONMENT + TEST TYPE SELECTION
-# ==========================================================
-
-env:
-  TEST_ENVIRONMENT: ${{ github.event_name == 'workflow_dispatch' && inputs.environment || 'staging' }}
-  TEST_TYPE: ${{ github.event_name == 'workflow_dispatch' && inputs.test_type || 'smoke' }}
-
-
-jobs:
-
-  # ==========================================================
-  # 1. GETTING INFORMATION
-  # ==========================================================
-
-  getting-information:
-    runs-on: ubuntu-latest
-
-    steps:
-
-      - name: Getting information
-        run: |
-          echo "=========================================="
-          echo "Getting pipeline information..."
-          echo "Repository  : ${{ github.repository }}"
-          echo "Branch      : ${{ github.ref_name }}"
-          echo "Run Number  : ${{ github.run_number }}"
-          echo "Commit      : ${{ github.sha }}"
-          echo "Event       : ${{ github.event_name }}"
-          echo "Environment : $TEST_ENVIRONMENT"
-          echo "Test Type   : $TEST_TYPE"
-          echo "=========================================="
-
-
-  # ==========================================================
-  # 2. PREPARING ENVIRONMENT
-  # ==========================================================
-
-  preparing-environment:
-    runs-on: ubuntu-latest
-    needs: getting-information
-
-    steps:
-
-      - name: Checkout repository
-        uses: actions/checkout@v5
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: 17
-          cache: maven
-
-      - name: Environment ready
-        run: |
-          echo "=========================================="
-          echo "Environment preparation completed."
-          echo "Target environment: $TEST_ENVIRONMENT"
-          echo "Test type: $TEST_TYPE"
-          echo "Java version:"
-          java -version
-          echo "=========================================="
-
-
-  # ==========================================================
-  # 3. RUNNING TESTS
-  # ==========================================================
-
-  run-tests:
-    runs-on: ubuntu-latest
-    needs: preparing-environment
-    timeout-minutes: 30
-
-    steps:
-
-      - name: Checkout repository
-        uses: actions/checkout@v5
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: 17
-          cache: maven
-
-      # --------------------------------------------------------
-      # VERIFY SELECTED ENVIRONMENT + TEST TYPE
-      # --------------------------------------------------------
-
-      - name: Verify environment and test type
-        run: |
-          echo "=========================================="
-          echo "PIPELINE VERIFICATION"
-          echo "=========================================="
-          echo "GitHub Event        : ${{ github.event_name }}"
-          echo "GitHub Environment  : ${{ inputs.environment }}"
-          echo "Selected Environment: $TEST_ENVIRONMENT"
-          echo "Selected Test Type  : $TEST_TYPE"
-          echo "=========================================="
-
-
-      # --------------------------------------------------------
-      # RUN MAVEN TESTS
-      # --------------------------------------------------------
-
-      - name: Run Maven tests
-        run: |
-          echo "=========================================="
-          echo "RUNNING API AUTOMATION TESTS"
-          echo "=========================================="
-          echo "Environment: $TEST_ENVIRONMENT"
-          echo "Test Type  : $TEST_TYPE"
-          echo "=========================================="
-
-          echo "Running Maven with:"
-          echo "-Denv=$TEST_ENVIRONMENT"
-          echo "-DtestType=$TEST_TYPE"
-
-          mvn -B clean test \
-            -Denv="$TEST_ENVIRONMENT" \
-            -DtestType="$TEST_TYPE"
-
-
-      # --------------------------------------------------------
-      # PRESERVE TEST RESULTS
-      # -------------------------------------------------------
-
-      - name: Upload Allure results
-        if: always()
-        uses: actions/upload-artifact@v6
-        with:
-          name: allure-results-run-${{ github.run_number }}
-          path: target/allure-results
-          if-no-files-found: ignore
-          retention-days: 7
-
-
-  # ==========================================================
-  # 4. GENERATE ALLURE REPORT
-  # ==========================================================
-
-  generate-allure:
-    runs-on: ubuntu-latest
-    needs: run-tests
-    if: always()
-
-    steps:
-
-      - name: Checkout repository
-        uses: actions/checkout@v5
-
-      - name: Download Allure results
-        uses: actions/download-artifact@v6
-        with:
-          name: allure-results-run-${{ github.run_number }}
-          path: target/allure-results
-
-      - name: Install Allure CLI
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y wget unzip
-
-          wget https://github.com/allure-framework/allure2/releases/download/2.29.0/allure-2.29.0.zip
-
-          unzip allure-2.29.0.zip
-
-          sudo mv allure-2.29.0 /opt/allure
-
-          sudo ln -s /opt/allure/bin/allure /usr/bin/allure
-
-      - name: Generate Allure report
-        run: |
-          echo "Generating Allure report..."
-          echo "Environment: $TEST_ENVIRONMENT"
-          echo "Test Type: $TEST_TYPE"
-
-          if [ -d target/allure-results ]; then
-            allure generate target/allure-results \
-              --clean \
-              --single-file \
-              -o target/allure-report
-          else
-            echo "No Allure results found."
-
-            mkdir -p target/allure-report
-
-            echo "No Allure results generated." \
-              > target/allure-report/README.txt
-          fi
-
-      - name: Upload Allure report artifact
-        uses: actions/upload-artifact@v6
-        with:
-          name: allure-report-run-${{ github.run_number }}-attempt-${{ github.run_attempt }}
-          path: target/allure-report
-          retention-days: 7
-
-
-  # ==========================================================
-  # 5. GENERATE TEST SUMMARY
-  # ==========================================================
-
-  generate-summary:
-    runs-on: ubuntu-latest
-    needs: generate-allure
-    if: always()
-
-    steps:
-
-      - name: Checkout repository
-        uses: actions/checkout@v5
-
-      - name: Download Allure results
-        uses: actions/download-artifact@v6
-        with:
-          name: allure-results-run-${{ github.run_number }}
-          path: target/allure-results
-
-      - name: Verify summary environment
-        run: |
-          echo "=========================================="
-          echo "GENERATING TEST SUMMARY"
-          echo "=========================================="
-          echo "Environment: $TEST_ENVIRONMENT"
-          echo "Test Type: $TEST_TYPE"
-          echo "=========================================="
-
-      - name: Generate test summary
-        run: |
-          python scripts/generate_test_summary.py \
-            target/allure-results \
-            target/test-summary.json
-
-      - name: Show generated environment
-        run: |
-          echo "=========================================="
-          echo "GENERATED JSON ENVIRONMENT"
-          echo "=========================================="
-
-          if [ -f target/test-summary.json ]; then
-            python -c "import json; data=json.load(open('target/test-summary.json')); print('JSON Environment:', data.get('environment', {}).get('Environment', 'NOT FOUND'))"
-          else
-            echo "test-summary.json not found"
-          fi
-
-          echo "=========================================="
-
-
-      # --------------------------------------------------------
-      # UPLOAD TEST SUMMARY
-      # --------------------------------------------------------
-
-      - name: Upload test summary
-        uses: actions/upload-artifact@v6
-        with:
-          name: test-summary-run-${{ github.run_number }}
-          path: target/test-summary.json
-          retention-days: 7
-
-
-      # ========================================================
-      # GITHUB PAGES - PREPARE TEST SUMMARY
-      # ========================================================
-
-      - name: Prepare GitHub Pages content
-        run: |
-          mkdir -p pages
-
-          if [ -f target/test-summary.json ]; then
-            cp target/test-summary.json pages/test-summary.json
-          else
-            echo '{"error":"test-summary.json not found"}' \
-              > pages/test-summary.json
-          fi
-
-      - name: Upload GitHub Pages artifact
-        uses: actions/upload-pages-artifact@v4
-        with:
-          path: pages
-
-
-  # ==========================================================
-  # 6. SEND RESULTS TO POWER AUTOMATE
-  # ==========================================================
-
-  send-results:
-    runs-on: ubuntu-latest
-    needs:
-      - generate-summary
-      - deploy-pages
-    if: always()
-
-    steps:
-
-      - name: Trigger Power Automate
-        env:
-          POWER_AUTOMATE_URL: ${{ secrets.POWER_AUTOMATE_URL }}
-
-        run: |
-          curl -X POST "$POWER_AUTOMATE_URL" \
-            -H "Content-Type: application/json" \
-            -d '{
-              "repository": "${{ github.repository }}",
-              "run_number": "${{ github.run_number }}",
-              "run_attempt": "${{ github.run_attempt }}",
-              "branch": "${{ github.ref_name }}",
-              "commit": "${{ github.sha }}",
-              "environment": "${{ env.TEST_ENVIRONMENT }}",
-              "testType": "${{ env.TEST_TYPE }}",
-              "status": "${{ needs.run-tests.result }}"
-            }'
-
-
-  # ==========================================================
-  # 7. DEPLOY TEST SUMMARY TO GITHUB PAGES
-  # ==========================================================
-
-  deploy-pages:
-    runs-on: ubuntu-latest
-
-    needs:
-      - generate-summary
-
-    if: always()
-
-    permissions:
-      pages: write
-      id-token: write
-
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
-    steps:
-
-      - name: Deploy test summary to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+        - name: Deploy test summary to GitHub Pages
+          id: deployment
+          uses: actions/deploy-pages@v4
